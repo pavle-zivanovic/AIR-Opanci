@@ -1,0 +1,12 @@
+.logo{
+    display: flex;
+    width: 150px;
+    height: 83px;
+    margin-top: -37px;
+    margin-right: 10px;
+}
+
+.active{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5), 0 6px 20px 0 rgba(0,0,0,0.10);
+    height:44px;
+  }

@@ -27,6 +27,12 @@ namespace Services
         {
             return await footwearCollection.Find(_ => true).ToListAsync();
         }
+
+        public async Task<Footwear> GetFootwearByID(string id)
+        {
+            return await footwearCollection.Find(f => f.Id == id).FirstOrDefaultAsync();
+        }
+        
     }
 }
 

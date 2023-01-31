@@ -37,5 +37,13 @@ namespace backend.Controllers
             string res = await modelService.CreateModel(m);
             return Ok(res);
         }
+
+        [Route("GetModelGender/{gender}")]
+        [HttpGet]
+        public async Task<IActionResult> GetModelGender(string gender)
+        {
+            var list = await modelService.GetModelGender(gender);
+            return Ok(list);
+        }
     }
 }

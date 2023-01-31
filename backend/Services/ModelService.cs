@@ -23,5 +23,11 @@ namespace Services
             return "Uspesno";
         }
 
+        public async Task<List<Model>> GetModelGender(string gender)
+        {
+            var list = await modelCollection.Find(m => m.gender == gender).ToListAsync();
+            return list;
+        }
+
     }
 }

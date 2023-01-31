@@ -45,5 +45,13 @@ namespace backend.Controllers
             return Ok(list);
         }
 
+        [Route("GetFootwearByID/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetFootwearByID(string id)
+        {
+            var f = await footwearService.GetFootwearByID(id);
+            return Ok(f);
+        }
+
     }
 }
