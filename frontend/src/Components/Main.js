@@ -24,6 +24,8 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ShowModels from './ShowModels';
 import { useNavigate, useLocation } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
+import FavoriteModels from './FavoriteModels';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -111,7 +113,8 @@ function Main() {
       onClose={handleMobileMenuCloseRight}
     >
       <MenuItem>
-      <IconButton sx={{width:"50px", height:"50px"}}>
+      <IconButton sx={{width:"50px", height:"50px"}}
+      onClick={() => navigate("favorite")}>
             <Badge badgeContent={5} sx={{ color:"black"}}>
                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
             </Badge>
@@ -137,6 +140,12 @@ function Main() {
         <AccountCircleOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
        </IconButton>
         <p>Signup</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton size="large">
+          <AddIcon sx={{ color:"black" }}/>
+        </IconButton>
+        <p>Add footwear</p>
       </MenuItem>
     </Menu>
   );
@@ -244,6 +253,11 @@ function Main() {
             <Grid container>
                 <Grid position="relative" bottom="45px"
                 sm={12} md={12}>
+                  <Tooltip title="Add footwear">
+                    <IconButton size="small">
+                      <AddIcon sx={{ color:"black" }}/>
+                    </IconButton>
+                  </Tooltip>
                     <Link
                     onClick={() => alert("Uloguj se")}
                     component="button"
@@ -262,7 +276,8 @@ function Main() {
                 <Grid position="relative" bottom="10px"
                 sm={12} md={4}>
                     <Tooltip title="Favorites">
-                        <IconButton sx={{width:"40px", height:"40px", marginRight:"8px"}}>
+                        <IconButton sx={{width:"40px", height:"40px", marginRight:"8px"}}
+                        onClick={() => navigate("favorite")}>
                             <Badge badgeContent={5} sx={{ color:"black"}}>
                                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
                             </Badge>
@@ -297,6 +312,7 @@ function Main() {
         <Route path="" element={<ShowModels gender={"men"} search={searchtext != "" ? searchtext : null} />} />
         <Route path="women" element={<ShowModels gender={"women"} search={searchtext != "" ? searchtext : null} />} />
         <Route path="kids" element={<ShowModels gender={"kids"} search={searchtext != "" ? searchtext : null} />} />
+        <Route path="favorite" element={<FavoriteModels />} />
       </Routes>
     </Box>
   );

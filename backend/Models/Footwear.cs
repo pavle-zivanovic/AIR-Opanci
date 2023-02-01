@@ -16,7 +16,7 @@ namespace Models
         //pamti se id usera
         public string user { get; set; }
 
-        public List<string> size { get; set; }
+        public string size { get; set; }
 
         public bool status { get; set; }
     }

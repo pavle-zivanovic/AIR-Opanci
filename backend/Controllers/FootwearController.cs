@@ -49,6 +49,11 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFootwearByID(string id)
         {
+            if(id.Length < 24 || id.Length > 24)
+            {
+                return BadRequest("Nevalidan footwearID!");
+            }
+
             var f = await footwearService.GetFootwearByID(id);
             return Ok(f);
         }

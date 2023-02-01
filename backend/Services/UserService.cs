@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Models;
@@ -19,6 +20,24 @@ namespace Services
         public async Task<string> CreateUser(User user)
         {
             await userCollection.InsertOneAsync(user);
+            return "Uspesno";
+        }
+
+        public async Task<List<string>> GetFavoriteModels(string userID)
+        {
+            var user = await userCollection.Find(u => u.Id == userID).FirstOrDefaultAsync();
+            var list = user.favorites;
+            return list;
+        }
+
+        public async Task<User> GetUserByID(string id)
+        {
+            return await userCollection.Find(u => u.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<string> UpdateUser(string userID, User newUser)
+        {
+            await userCollection.ReplaceOneAsync(u => u.Id == userID, newUser);
             return "Uspesno";
         }
     }

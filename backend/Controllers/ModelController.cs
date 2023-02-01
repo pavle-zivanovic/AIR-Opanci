@@ -14,10 +14,12 @@ namespace backend.Controllers
     public class ModelController : ControllerBase
     {
         private readonly ModelService modelService;
+        private readonly UserService userService;
 
-        public ModelController(ModelService _modelService)
+        public ModelController(ModelService _modelService, UserService _userService)
         {
             modelService = _modelService;
+            userService = _userService;
         }
 
         [Route("CreateModel")]
@@ -28,6 +30,7 @@ namespace backend.Controllers
             { 
               brand = model.brand,
               name = model.name,
+              type = model.type,
               price = model.price,
               image = model.image,
               discount = model.discount,
@@ -44,6 +47,43 @@ namespace backend.Controllers
         {
             var list = await modelService.GetModelGender(gender);
             return Ok(list);
+        }
+
+        [Route("GetFavoriteModels/{userID}")]
+        [HttpGet]
+        public async Task<IActionResult> GetFavoriteModels(string userID)
+        {
+            if(userID.Length < 24 || userID.Length > 24)
+            {
+                return BadRequest("Nevalidan userID!");
+            }
+            
+            var modelsID = await userService.GetFavoriteModels(userID);
+            List<Model> models = new List<Model>();
+
+            for(int i=0; i<modelsID.Count; i++)
+            {
+                var m = await modelService.GetModelByID(modelsID[i]);
+                models.Add(m);
+            }
+
+            return Ok(models);
+        }
+
+        [Route("SearchModels/{searchtext}")]
+        [HttpGet]
+        public async Task<IActionResult> SearchModels(string searchtext)
+        {
+            var models = await modelService.SearchModels(searchtext);
+            return Ok(models);
+        }
+
+        [Route("FilterModels/{categories}/{brands}/{size}/{price}")]
+        [HttpGet]
+        public async Task<IActionResult> FilterModels(string categories, string brands, string size, string price)
+        {
+            var models = await modelService.FilterModels(categories, brands, size, price);
+            return Ok(models);
         }
     }
 }

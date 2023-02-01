@@ -14,14 +14,16 @@ namespace Models
 
         public string name { get; set; }
 
-        public string price { get; set; }
+        public string type { get; set; }
+
+        public double price { get; set; }
 
         //pamtimo listu id-eva obuce
         public List<string> items { get; set; }
 
         public string image { get; set; }
 
-        public string discount { get; set; } = null!;
+        public int discount { get; set; }
 
         public string gender { get; set; }
     }

@@ -38,5 +38,46 @@ namespace backend.Controllers
             return Ok(res);
         }
 
+        [Route("LikeTheModel/{userID}/{modelID}")]
+        [HttpPut]
+        public async Task<IActionResult> LikeTheModel(string userID, string modelID)
+        {
+            if(userID.Length < 24 || userID.Length > 24)
+            {
+                return BadRequest("Nevalidan userID!");
+            }
+
+            if(modelID.Length < 24 || modelID.Length > 24)
+            {
+                return BadRequest("Nevalidan modelID!");
+            }
+
+            var user = await userService.GetUserByID(userID);
+            user.favorites.Add(modelID);
+
+            string res = await userService.UpdateUser(userID, user);
+            return Ok(res);
+        }
+
+        [Route("UnlikeTheModel/{userID}/{modelID}")]
+        [HttpPut]
+        public async Task<IActionResult> UnlikeTheModel(string userID, string modelID)
+        {
+            if(userID.Length < 24 || userID.Length > 24)
+            {
+                return BadRequest("Nevalidan userID!");
+            }
+
+            if(modelID.Length < 24 || modelID.Length > 24)
+            {
+                return BadRequest("Nevalidan modelID!");
+            }
+
+            var user = await userService.GetUserByID(userID);
+            user.favorites.Remove(modelID);
+
+            string res = await userService.UpdateUser(userID, user);
+            return Ok(res);
+        }
     }
 }
