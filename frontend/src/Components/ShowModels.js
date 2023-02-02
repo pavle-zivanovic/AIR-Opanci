@@ -5,7 +5,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
@@ -16,6 +16,8 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+
+const userID = "63d82978e8579d58ea82fddf";
 
 function ShowModels({gender, search}){
     const [models ,setModels] = useState(null);
@@ -34,6 +36,38 @@ function ShowModels({gender, search}){
                 console.log(data)
             });
       },[gender])
+
+      useEffect(() => {
+        if(search != null)
+        {
+            fetch("/Model/SearchModels/"+search,
+            {
+                method:"GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) =>  res.json())
+            .then((data) => {
+                    setModels(data);
+                });
+        }
+        else
+        {
+            fetch("/Model/GetModelGender/"+gender,
+            {
+                method:"GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) =>  res.json())
+            .then((data) => {
+                    setModels(data);
+                });
+        }
+      
+      },[search])
 
       return(
         <div>
@@ -197,8 +231,9 @@ function ShowModelsRender({models}){
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <IconButton sx={{width:"30px", height:"30px"}}>
-                                <FavoriteBorderIcon sx={{width:"27px", height:"27px", color:"black"}} />
+                            <IconButton sx={{width:"30px", height:"30px",}}>
+                                <FavoriteIcon sx={{width:"27px", height:"27px",
+                              color:model.users.includes(userID) ? "red" : "black"}} />
                             </IconButton>
                         </CardActions>
                     </Card>

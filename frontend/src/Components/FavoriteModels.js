@@ -5,7 +5,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
@@ -79,7 +79,7 @@ function FavoriteModelsRender({models}){
                         </CardContent>
                         <CardActions>
                             <IconButton sx={{width:"30px", height:"30px"}}>
-                                <FavoriteBorderIcon sx={{width:"27px", height:"27px", color:"black"}} />
+                                <FavoriteIcon sx={{width:"27px", height:"27px", color:"black"}} />
                             </IconButton>
                         </CardActions>
                     </Card>

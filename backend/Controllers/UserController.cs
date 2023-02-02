@@ -15,6 +15,8 @@ namespace backend.Controllers
     {
         private readonly UserService userService;
 
+        private readonly ModelService modelService;
+
         public UserController(UserService _userService)
         {
             userService = _userService;
@@ -54,8 +56,12 @@ namespace backend.Controllers
 
             var user = await userService.GetUserByID(userID);
             user.favorites.Add(modelID);
+            
+            var model = await modelService.GetModelByID(modelID);
+            model.users.Add(userID);
 
             string res = await userService.UpdateUser(userID, user);
+            res += await modelService.UpdateModel(modelID, model);
             return Ok(res);
         }
 
@@ -76,7 +82,11 @@ namespace backend.Controllers
             var user = await userService.GetUserByID(userID);
             user.favorites.Remove(modelID);
 
+            var model = await modelService.GetModelByID(modelID);
+            model.users.Remove(userID);
+
             string res = await userService.UpdateUser(userID, user);
+            res += await modelService.UpdateModel(modelID, model);
             return Ok(res);
         }
     }

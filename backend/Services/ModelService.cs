@@ -35,6 +35,12 @@ namespace Services
             return await modelCollection.Find(m => m.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<string> UpdateModel(string modelID, Model newModel)
+        {
+            await modelCollection.ReplaceOneAsync(m => m.Id == modelID, newModel);
+            return "Uspesno";
+        }
+
         public async Task<List<Model>> SearchModels(string search)
         {
             return await modelCollection.Find(m => 
