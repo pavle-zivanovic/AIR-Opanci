@@ -56,7 +56,7 @@ namespace Services
             ).ToListAsync();
         }
 
-        public async Task<List<Model>> FilterModels(string _categories, string _brands, string _price)
+        public async Task<List<Model>> FilterModels(string _categories, string _brands, string _price, string gender)
         {
             List<string> categories = new List<string>();
             if(!_categories.Equals("empty"))
@@ -141,7 +141,7 @@ namespace Services
             }
             else
             {
-                return await modelCollection.Find(_ => true).ToListAsync();
+                return await modelCollection.Find(m => m.gender == gender).ToListAsync();
             }
         }
     }

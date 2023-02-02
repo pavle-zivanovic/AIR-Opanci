@@ -37,7 +37,10 @@ namespace backend.Controllers
               email = user.email,
               password = user.password,
               address = user.address,
-              phone = user.phone
+              phone = user.phone,
+              items = user.items,
+              favorites = user.favorites,
+              postedItems = user.postedItems
             };
 
             string res = await userService.CreateUser(u);

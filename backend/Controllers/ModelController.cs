@@ -32,9 +32,11 @@ namespace backend.Controllers
               name = model.name,
               type = model.type,
               price = model.price,
+              items = model.items,
               image = model.image,
               discount = model.discount,
-              gender = model.gender
+              gender = model.gender,
+              users = model.users
             };
 
             string res = await modelService.CreateModel(m);
@@ -78,11 +80,11 @@ namespace backend.Controllers
             return Ok(models);
         }
 
-        [Route("FilterModels/{categories}/{brands}/{price}")]
+        [Route("FilterModels/{categories}/{brands}/{price}/{gender}")]
         [HttpGet]
-        public async Task<IActionResult> FilterModels(string categories, string brands, string price)
+        public async Task<IActionResult> FilterModels(string categories, string brands, string price, string gender)
         {
-            var models = await modelService.FilterModels(categories, brands, price);
+            var models = await modelService.FilterModels(categories, brands, price, gender);
             return Ok(models);
         }
     }

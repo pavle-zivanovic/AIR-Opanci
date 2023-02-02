@@ -17,6 +17,15 @@ import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { createTheme, rgbToHex, ThemeProvider } from '@mui/material/styles';
+
+const blackTheme = createTheme({
+  palette: {
+    primary: {
+      main: "rgb(0,0,0)",
+    },
+  },
+});
 
 const userID = "63d82978e8579d58ea82fddf";
 
@@ -71,7 +80,7 @@ function ShowModels({gender, search}){
 
       return(
         <div>
-            {models && models != null && <ShowModelsRender models={models} />}
+            {models && models != null && <ShowModelsRender models={models} setModels={setModels} gender={gender}/>}
         </div>
        )
 }
@@ -87,7 +96,7 @@ const MenuProps = {
   },
 };
 
-function ShowModelsRender({models}){
+function ShowModelsRender({models, setModels, gender}){
 
   let [category, setCategory] = React.useState([]);
   let [brand, setBrand] = React.useState([]);
@@ -181,18 +190,21 @@ const LikeTheModel = (id, like) =>{
   if(price.length == 0)
     price = "empty";
 
-  console.log("category:"+category);
-  console.log("brand:"+brand);
-  console.log("price:"+price);
-
-  await fetch("/Model/FilterModels/"+category+"/"+brand+"/"+price,
+  await fetch("/Model/FilterModels/"+category+"/"+brand+"/"+price+"/"+gender,
     {
         method:"GET",
         headers:{
             "Content-Type":"application/json"
         },
     })
+    .then((res) => res.json())
+    .then((data) => {
+            setModels(data);
+        });
 }
+
+useEffect(() => {
+},[models])
 
 const DeleteModel = (id) =>{
   modelID = id;
@@ -224,6 +236,7 @@ const DeleteModel = (id) =>{
                       <Grid xs={6} sm={4} md={3}>
                           <FormControl sx={{ m: 1, width: 150 }}
                           key={index}>
+                            <ThemeProvider theme={blackTheme}>
                               <InputLabel>{filter.name}</InputLabel>
                               <Select
                               key={index}
@@ -241,6 +254,7 @@ const DeleteModel = (id) =>{
                                   </MenuItem>
                               ))}
                               </Select>
+                            </ThemeProvider>
                           </FormControl>
                       </Grid>
                   </React.Fragment>
