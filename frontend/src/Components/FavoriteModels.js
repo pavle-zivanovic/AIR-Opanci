@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
+const userID = "63d82978e8579d58ea82fddf";
+
 function FavoriteModels(){
     const [models ,setModels] = useState(null);
 
@@ -36,6 +38,35 @@ function FavoriteModels(){
 }
 
 function FavoriteModelsRender({models}){
+
+let modelID = null;
+
+const LikeTheModel = (id, like) =>{
+  modelID = id;
+
+  if(like == true)
+  {
+    fetch("/User/LikeTheModel/"+userID+"/"+modelID,
+    {
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json"
+        },
+    })
+  }
+  else
+  {
+    fetch("/User/UnlikeTheModel/"+userID+"/"+modelID,
+    {
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json"
+        },
+    })
+  }
+
+  window.location.reload(true)
+}
 
     return(
         <Box sx={{ flexGrow: 1,
@@ -78,8 +109,10 @@ function FavoriteModelsRender({models}){
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <IconButton sx={{width:"30px", height:"30px"}}>
-                                <FavoriteIcon sx={{width:"27px", height:"27px", color:"black"}} />
+                            <IconButton sx={{width:"30px", height:"30px"}}
+                            onClick={() => LikeTheModel(model.id, model.users.includes(userID) ? false : true)}>
+                                <FavoriteIcon sx={{width:"27px", height:"27px",
+                                color:model.users.includes(userID) ? "red" : "black"}} />
                             </IconButton>
                         </CardActions>
                     </Card>

@@ -16,6 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const userID = "63d82978e8579d58ea82fddf";
 
@@ -33,7 +34,6 @@ function ShowModels({gender, search}){
         .then((res) => res.json())
         .then((data) => {
                 setModels(data);
-                console.log(data)
             });
       },[gender])
 
@@ -89,10 +89,9 @@ const MenuProps = {
 
 function ShowModelsRender({models}){
 
-  const [category, setCategory] = React.useState([]);
-  const [brand, setBrand] = React.useState([]);
-  const [size, setSize] = React.useState([]);
-  const [price, setPrice] = React.useState([]);
+  let [category, setCategory] = React.useState([]);
+  let [brand, setBrand] = React.useState([]);
+  let [price, setPrice] = React.useState([]);
 
   const handleChangeCategory = (event) => {
     const {
@@ -108,15 +107,6 @@ function ShowModelsRender({models}){
       target: { value },
     } = event;
     setBrand(
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-
-  const handleChangeSize = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSize(
       typeof value === 'string' ? value.split(',') : value,
     );
   };
@@ -147,20 +137,80 @@ function ShowModelsRender({models}){
     },
     {
         id:2,
-        name:"size",
-        items:["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32",
-        "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"],
-        value:size,
-        function:handleChangeSize
-    },
-    {
-        id:3,
         name:"price",
         items:["0-5000", "5001-10000", "10001-15000", "15001-20000"],
         value:price,
         function:handleChangePrice
     }
 ]
+
+let modelID = null;
+
+const LikeTheModel = (id, like) =>{
+  modelID = id;
+
+  if(like == true)
+  {
+    fetch("/User/LikeTheModel/"+userID+"/"+modelID,
+    {
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json"
+        },
+    })
+  }
+  else
+  {
+    fetch("/User/UnlikeTheModel/"+userID+"/"+modelID,
+    {
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json"
+        },
+    })
+  }
+
+  window.location.reload(true)
+}
+
+ async function ApplyFilter(){
+  if(category.length == 0)
+    category = "empty";
+  if(brand.length == 0)
+    brand = "empty";
+  if(price.length == 0)
+    price = "empty";
+
+  console.log("category:"+category);
+  console.log("brand:"+brand);
+  console.log("price:"+price);
+
+  await fetch("/Model/FilterModels/"+category+"/"+brand+"/"+price,
+    {
+        method:"GET",
+        headers:{
+            "Content-Type":"application/json"
+        },
+    })
+}
+
+const DeleteModel = (id) =>{
+  modelID = id;
+
+  fetch("/User/DeleteModel/"+userID+"/"+modelID,
+  {
+      method:"DELETE",
+      headers:{
+          "Content-Type":"application/json"
+      },
+  }).then((res) =>  res.json())
+  .then((data) => {
+          if(data == 0)
+          {
+            alert("Niste u mogucnosti da obrisete ovaj model obuce!");
+          }
+      });
+}
 
     return(
         <Box sx={{ flexGrow: 1,
@@ -195,6 +245,23 @@ function ShowModelsRender({models}){
                       </Grid>
                   </React.Fragment>
                 ))}
+                <Grid xs={6} sm={4} md={3}>
+                  <button
+                  onClick={()=>ApplyFilter()}
+                  style={{
+                    backgroundColor: "black",
+                    borderRadius:"6px",
+                    color: "white",
+                    padding: "18px 32px",
+                    textAlign: "center",
+                    display: "inline-block",
+                    fontSize: "16px",
+                    margin: "4px 8px",
+                    cursor: "pointer"
+                  }}>
+                    Apply filters
+                  </button>
+                </Grid>
             </Grid>
             <Grid container spacing={2}>
                 {models.map((model, index) => (
@@ -231,9 +298,14 @@ function ShowModelsRender({models}){
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <IconButton sx={{width:"30px", height:"30px",}}>
+                            <IconButton sx={{width:"30px", height:"30px"}}
+                            onClick={() => LikeTheModel(model.id, model.users.includes(userID) ? false : true)}>
                                 <FavoriteIcon sx={{width:"27px", height:"27px",
                               color:model.users.includes(userID) ? "red" : "black"}} />
+                            </IconButton>
+                            <IconButton sx={{width:"30px", height:"30px"}}
+                            onClick={()=>DeleteModel(model.id)}>
+                                <DeleteIcon sx={{width:"27px", height:"27px", color:"black"}} />
                             </IconButton>
                         </CardActions>
                     </Card>

@@ -41,6 +41,12 @@ namespace Services
             return "Uspesno";
         }
 
+        public async Task<string> DeleteModel(string id)
+        {
+            await modelCollection.DeleteOneAsync(m => m.Id == id);
+            return "Uspesno";
+        }
+
         public async Task<List<Model>> SearchModels(string search)
         {
             return await modelCollection.Find(m => 
@@ -50,51 +56,93 @@ namespace Services
             ).ToListAsync();
         }
 
-        public async Task<List<Model>> FilterModels(string _categories, string _brands, string _size, string _price)
+        public async Task<List<Model>> FilterModels(string _categories, string _brands, string _price)
         {
             List<string> categories = new List<string>();
-            var categoriesTemp = _categories.Split(",");
-            foreach(string i in categoriesTemp)
+            if(!_categories.Equals("empty"))
             {
-                categories.Add(i);
-            }
-
-            List<string> brands = new List<string>();
-            var brandsTemp = _brands.Split(",");
-            foreach(string i in brandsTemp)
-            {
-                brands.Add(i);
-            }
-
-            List<string> size = new List<string>();
-            var sizeTemp = _size.Split(",");
-            foreach(string i in sizeTemp)
-            {
-                size.Add(i);
-            }
-
-            var priceTemp = _price.Split(",");
-            List<string> price = new List<string>();
-            foreach(string i in priceTemp)
-            {
-                var tmp = i.Split("-");
-                foreach(string j in tmp)
+                var categoriesTemp = _categories.Split(",");
+                foreach(string i in categoriesTemp)
                 {
-                    price.Add(j);
+                    categories.Add(i);
                 }
             }
 
-            List<double> priceD = new List<double>();
-            foreach(string i in price)
+            List<string> brands = new List<string>();
+            if(!_brands.Equals("empty"))
             {
-                double j = Convert.ToDouble(i);
-                priceD.Add(j);
+                var brandsTemp = _brands.Split(",");
+                foreach(string i in brandsTemp)
+                {
+                    brands.Add(i);
+                }
             }
+            
+            List<string> price = new List<string>();
+            List<double> priceD = new List<double>();
 
-            return await modelCollection.Find(m =>
-            categories.Contains(m.type) || brands.Contains(m.brand) ||
-            (m.price > priceD[0] && m.price < priceD[price.Count-1]))
-            .ToListAsync();
+            if(!_price.Equals("empty"))
+            {
+                var priceTemp = _price.Split(",");
+                foreach(string i in priceTemp)
+                {
+                    var tmp = i.Split("-");
+                    foreach(string j in tmp)
+                    {
+                        price.Add(j);
+                    }
+                }
+
+                foreach(string i in price)
+                {
+                    double j = Convert.ToDouble(i);
+                    priceD.Add(j);
+                }
+            }
+            
+
+            if(categories.Count!=0 && brands.Count!=0 && priceD.Count!=0)
+            {
+                return await modelCollection.Find(m =>
+                categories.Contains(m.type.ToLower()) && brands.Contains(m.brand.ToLower()) &&
+                (m.price > priceD[0] && m.price < priceD[price.Count-1])).ToListAsync();
+            }
+            else if(categories.Count==0 && brands.Count!=0 && priceD.Count!=0)
+            {
+                return await modelCollection.Find(m =>
+                brands.Contains(m.brand.ToLower()) &&
+                (m.price > priceD[0] && m.price < priceD[price.Count-1])).ToListAsync();
+            }
+            else if(categories.Count!=0 && brands.Count==0 && priceD.Count!=0)
+            {
+                return await modelCollection.Find(m =>
+                categories.Contains(m.type.ToLower()) &&
+                (m.price > priceD[0] && m.price < priceD[price.Count-1])).ToListAsync();
+            }
+            else if(categories.Count!=0 && brands.Count!=0 && priceD.Count==0)
+            {
+                return await modelCollection.Find(m =>
+                categories.Contains(m.type.ToLower()) && brands.Contains(m.brand.ToLower())).ToListAsync();
+            }
+            else if(categories.Count==0 && brands.Count==0 && priceD.Count!=0)
+            {
+                return await modelCollection.Find(m =>
+                (m.price > priceD[0] && m.price < priceD[price.Count-1])).ToListAsync();
+            }
+            else if(categories.Count!=0 && brands.Count==0 && priceD.Count==0)
+            {
+                return await modelCollection.Find(m =>
+                categories.Contains(m.type.ToLower())).ToListAsync();
+            }
+            else if(categories.Count==0 && brands.Count!=0 && priceD.Count==0)
+            {
+                return await modelCollection.Find(m =>
+                brands.Contains(m.brand.ToLower())).ToListAsync();
+            }
+            else
+            {
+                return await modelCollection.Find(_ => true).ToListAsync();
+            }
         }
     }
 }

@@ -78,11 +78,11 @@ namespace backend.Controllers
             return Ok(models);
         }
 
-        [Route("FilterModels/{categories}/{brands}/{size}/{price}")]
+        [Route("FilterModels/{categories}/{brands}/{price}")]
         [HttpGet]
-        public async Task<IActionResult> FilterModels(string categories, string brands, string size, string price)
+        public async Task<IActionResult> FilterModels(string categories, string brands, string price)
         {
-            var models = await modelService.FilterModels(categories, brands, size, price);
+            var models = await modelService.FilterModels(categories, brands, price);
             return Ok(models);
         }
     }

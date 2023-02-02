@@ -33,6 +33,11 @@ namespace Services
             return await footwearCollection.Find(f => f.Id == id).FirstOrDefaultAsync();
         }
         
+        public async Task<string> DeleteFootwear(string id)
+        {
+            await footwearCollection.DeleteOneAsync(f => f.Id == id);
+            return "Uspesno";
+        }
     }
 }
 
