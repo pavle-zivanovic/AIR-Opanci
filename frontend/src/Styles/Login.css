@@ -1,0 +1,77 @@
+html,body{
+    width: 100%;
+    height: 100%;
+}
+
+
+.loginForm{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+form{
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.emailInput{
+    margin-top: 15%;
+    padding: 15px;
+    background-color: whitesmoke;
+}
+.emailInput:focus{
+    outline: none !important;
+    border: 2px solid #EF4765;
+    box-shadow: 0 0 10px #d9ac71;
+}
+.passInput{
+    background-color: whitesmoke;
+    padding: 15px;
+}
+.passInput:focus{
+    outline: none !important;
+    border: 2px solid #EF4765;
+    box-shadow: 0 0 10px #d9ac71;
+}
+.divLogin{
+    width: 20%;
+    margin-top: 2.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn_Login {
+    background: linear-gradient(to bottom right, #EF4765, #FF9A5A);
+    border: 0;
+    border-radius: 12px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    width: 50%;
+    line-height: 2.5;
+    outline: transparent;
+    padding: 0 1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: box-shadow .2s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+  }
+  
+.btn_Login:not([disabled]):focus {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+  }
+  
+.btn_Login:not([disabled]):hover {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+  }

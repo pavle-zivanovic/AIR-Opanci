@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, rgbToHex } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -26,6 +26,10 @@ import ShowModels from './ShowModels';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteModels from './FavoriteModels';
+import LoginPage from './LoginPage';
+import SignUpPage from './SignUpPage';
+import AddFootwear from './AddFootwear';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -133,7 +137,7 @@ function Main() {
       <IconButton sx={{width:"50px", height:"50px"}}>
         <LoginOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
        </IconButton>
-        <p>Login</p>
+        <p> Login </p>
       </MenuItem>
       <MenuItem>
       <IconButton sx={{width:"50px", height:"50px"}}>
@@ -197,7 +201,7 @@ function Main() {
     <Box sx={{ flexGrow: 1, width:"100%" }}>
       <AppBar 
         position="sticky"
-        sx={{ backgroundColor: "white", boxShadow: "none", width:"100%" }}>
+        sx={{ backgroundColor: "rgb(255,255,255)", boxShadow: "none", width:"100%", borderBottom : "3px solid black" }}>
         <Toolbar sx={{ height:"160px" }}>
         <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
           <IconButton
@@ -254,23 +258,23 @@ function Main() {
                 <Grid position="relative" bottom="45px"
                 sm={12} md={12}>
                   <Tooltip title="Add footwear">
-                    <IconButton size="small">
+                    <IconButton size="small" onClick={() => navigate("/AddFootwear")}>
                       <AddIcon sx={{ color:"black" }}/>
                     </IconButton>
                   </Tooltip>
                     <Link
-                    onClick={() => alert("Uloguj se")}
+                    onClick={() => navigate("/LoginPage")}
                     component="button"
                     sx={{color:"black", fontSize:"16px"}}
                     underline="hover">
-                        Login|
+                        Login |
                     </Link>
                     <Link
-                    onClick={() => alert("Napravi nalog")}
+                    onClick={() => navigate("/SignUpPage")}
                     component="button"
-                    sx={{color:"black", fontSize:"16px"}}
+                    sx={{color:"black", fontSize:"16px",marginLeft:"5px"}}
                     underline="hover">
-                        Signup 
+                         Signup 
                     </Link>
                 </Grid>
                 <Grid position="relative" bottom="10px"
@@ -313,6 +317,9 @@ function Main() {
         <Route path="women" element={<ShowModels gender={"women"} search={searchtext != "" ? searchtext : null} />} />
         <Route path="kids" element={<ShowModels gender={"kids"} search={searchtext != "" ? searchtext : null} />} />
         <Route path="favorite" element={<FavoriteModels />} />
+        <Route path="LoginPage" element={<LoginPage />} />
+        <Route path="SignUpPage" element={<SignUpPage />} />
+        <Route path="AddFootwear" element={<AddFootwear />} />
       </Routes>
     </Box>
   );
