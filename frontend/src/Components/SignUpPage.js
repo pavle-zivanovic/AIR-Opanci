@@ -14,7 +14,6 @@ import '../Styles/SignUp.css';
 
 function SignUpPage(){
 
-
     const [passWord , setPassWord] = useState('')
     const [passError , setPassError] = useState(false)
     const [email , setEmail] = useState('')
@@ -33,13 +32,20 @@ function SignUpPage(){
 
     async function signUP(){
 
+        var items = [];
+        var favorites = [];
+        var postedItems = [];
+
         const user = {
             password: passWord,
             email: email,
             firstName : firstName,
             lastName : lastName,
             phone : phoneNo,
-            address : address
+            address : address,
+            items : items,
+            favorites : favorites,
+            postedItems : postedItems
        }
        try{
         let result = await fetch("User/CreateUser/", {
@@ -53,8 +59,10 @@ function SignUpPage(){
           let a = await result.json();
 
           if (a === 1){
-            navigate("/")
-        
+            navigate("/")   
+          }
+          else{
+            alert("Email je vec registrovan !");
           }
        }
        catch (error)

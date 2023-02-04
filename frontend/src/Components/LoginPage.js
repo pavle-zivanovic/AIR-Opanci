@@ -16,6 +16,7 @@ import '../Styles/Login.css';
 
 function LoginPage(){
 
+
     const [passWord , setPassWord] = useState('')
     const [passError , setPassError] = useState(false)
     const [email , setEmail] = useState('')
@@ -37,12 +38,14 @@ function LoginPage(){
 
 
 async function Login(){
-
+    
     const user = {
         password: passWord,
         email: email,
    }
+
    try{
+
     let result = await fetch("User/Login/", {
         method : 'POST',
         headers : {
@@ -53,9 +56,16 @@ async function Login(){
       });
       let a = await result.json();
 
-      if (a === 1){
-        navigate("/")
-    
+      
+      if (a === -1){
+        alert("Nepostojeci korisnik");
+      }
+      else{
+        
+        window.localStorage.setItem('user-info',JSON.stringify(a.id));
+        console.log(a);
+        navigate('/');
+        
       }
    }
    catch (error)
@@ -65,6 +75,7 @@ async function Login(){
 }
 
 const handleLogin = ()=> {
+
     setEmailError(false);setPassError(false);
 
 
@@ -74,32 +85,30 @@ const handleLogin = ()=> {
     if (passWord === ''){
         setPassError(true)
     }
-
     if(passError){
-
         alert("Nisu popunjena sva potrebna polja")
     }
     // ako je sve ok pravi se nalog i prebacuje nas na main 
     if(!emailCheck()){
         alert("Nevalidan email")
     }
-    if (passWord && emailError && emailCheck()){
-        
+    if (passWord && email && emailCheck()){
+
         Login()
     }
 }
 
     return(
-        <div class="LoginForm">
+        <div className='LoginForm'>
             <form>      
-                <div class="divLogin">
-                    <input class="emailInput" type={'text'} placeholder="Email" error={setEmailError} onChange={ (e) => setEmail(e.target.value) } /> 
+                <div className="divLogin">
+                    <input className="emailInput" type={'text'} placeholder="Email" error={emailError} onChange={ (e) => setEmail(e.target.value) } /> 
                 </div>
-                <div class="divLogin">
-                    <input class="passInput" type={'password'} placeholder="Password" error={setPassError}  onChange={ (e) => setPassWord(e.target.value) }/> 
+                <div className="divLogin">
+                    <input className="passInput" type={'password'} placeholder="Password" error={passError}  onChange={ (e) => setPassWord(e.target.value) }/> 
                 </div>
-                <div class="divLogin">
-                    <input class="btn_Login" type={'button'} value="Login" onClick={handleLogin}  /> 
+                <div className="divLogin">
+                    <input className="btn_Login" type={'button'} value="Login" onClick={handleLogin}  /> 
                 </div>
             </form>
         </div>

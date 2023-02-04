@@ -133,13 +133,13 @@ function Main() {
        </IconButton>
         <p>Bag</p>
       </MenuItem>
-      <MenuItem>
-      <IconButton sx={{width:"50px", height:"50px"}}>
+      <MenuItem onClick={() => navigate("/LoginPage")}>
+      <IconButton  sx={{width:"50px", height:"50px"}}>
         <LoginOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
-       </IconButton>
+       </IconButton >
         <p> Login </p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={() => navigate("/SignUpPage")}>
       <IconButton sx={{width:"50px", height:"50px"}}>
         <AccountCircleOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
        </IconButton>

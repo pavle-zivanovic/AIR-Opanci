@@ -9,8 +9,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import '../Styles/AddFootwear.css';
 import { createTheme, rgbToHex, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 function AddFootwear(){
+
+    const user = JSON.parse(window.localStorage.getItem('user-info'));
+    const navigate = useNavigate();
 
     const [brand, setBrand] = useState('')
     const [brandError , setBrandError] = useState(false)
@@ -25,6 +29,8 @@ function AddFootwear(){
     const [name , setName] = useState('')
     const [nameError, setNameError] = useState(false)
 
+
+    const [modelID ,setModelID] = useState('')
     const [model, setModel] = useState('')
     const [modelError , setModelError] = useState(false)
 
@@ -44,7 +50,7 @@ function AddFootwear(){
         if ( price === ''){
             setPriceError(true);
         }
-        if ( model === ''){
+        if ( name === ''){
             setModelError(true);
         }
         if( gender === ''){
@@ -56,19 +62,82 @@ function AddFootwear(){
         if ( type === ''){
             setTypeError(true);
         }
-        if(brandError  || modelError || typeError || priceError || imageError || genderError ){
+        if(brandError  || nameError || typeError || priceError || imageError || genderError ){
 
             alert("Nisu popunjena sva potrebna polja")
         }
-        if (brand && model && type && price && image && gender)
+        if (brand && name && type && price && image && gender)
         {
             alert("POSTAVLJENO")
-            //setModel(name)
+            addModel()
             setOpen(false)
         }
     }
 
-    async function addFootwear(){
+    async function addModel(){
+        
+        var items = [];
+        var users = [];
+        
+
+
+        const model = {
+            brand: brand,
+            name: name,
+            type : type,
+            price : price,
+            items : items,
+            image : image,
+            discount : 0,
+            gender : gender,
+            users : users,
+            user : user 
+       }
+       try{
+        let result = await fetch("Model/CreateModel/", {
+            method : 'POST',
+            headers : {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Accept': 'application/json; charset=utf-8'
+            },
+            body : JSON.stringify(model)
+          });
+          let a = await result.json();
+          console.log(a.id);
+          setModelID(a.id);  
+       }
+       catch (error)
+       {
+          //console.log(error)
+       }
+    }
+
+    async function addFootwear(element){
+
+        const footwear = {
+            size : element,
+            model : modelID,
+            user : user
+       }
+       try{
+        let result = await fetch("Footwear/CreateFootwear/", {
+            method : 'POST',
+            headers : {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Accept': 'application/json; charset=utf-8'
+            },
+            body : JSON.stringify(footwear)
+          });
+          let a = await result.json();
+
+
+       }
+       catch (error)
+       {
+          //console.log(error)
+       }
+
+
 
     }
 
@@ -78,12 +147,17 @@ function AddFootwear(){
         if (size[0] === ''){
             setSizeError(true);
         }
-        if (model === ''){
+        if (model === '' && modelID === ''){
             setModelError(true);
         }
-        if (size && model ){
-            alert(model);
-            addFootwear();
+        if (modelID === ''){
+            alert("Nema id");
+        }
+        if (size  && modelID ){
+            //alert(model);
+            size.forEach(element => {
+                addFootwear(element);
+            });        
         }
     }
     
@@ -129,10 +203,32 @@ function AddFootwear(){
             typeof value === 'string' ? value.split(',') : value,
           );
         };
-    const handleModelChange = (event) => {
-            setModel(event.target.value);
-        };
 
+
+        
+    async function handleModelChange(event){
+        
+        setModel(event.target.value);
+
+        try{
+            let result = await fetch("Model/GetModelByName/" + event.target.value, {
+                method : 'GET',
+                headers : {
+                  'Content-Type': 'application/json; charset=utf-8',
+                  'Accept': 'application/json; charset=utf-8'
+                },
+              });
+              let a = await result.json();
+              console.log(a);
+              setModelID(a.id);
+
+
+           }
+        catch (error)
+           {
+              //console.log(error)
+           }
+        };
 
     return(
         <div class="AddFootwear">
@@ -177,7 +273,7 @@ function AddFootwear(){
                                 error={modelError}      
                                 onChange={handleModelChange}
                             >
-                                <MenuItem value={10}>Air Force 1</MenuItem>
+                                <MenuItem value='Air Force 1'>Air Force 1</MenuItem>
                                 <MenuItem value={20}>Air Max 95</MenuItem>
                                 <MenuItem value={30}>Jordan 1</MenuItem>
                                 <MenuItem value={40}>VaporMax</MenuItem>
@@ -222,15 +318,15 @@ function AddFootwear(){
                         error={brandError}    
                         onChange={(e) => setBrand(e.target.value)}
                     >
-                        <MenuItem value={10}>Nike</MenuItem>
-                        <MenuItem value={20}>Adiddas</MenuItem>
-                        <MenuItem value={30}>Puma</MenuItem>
-                        <MenuItem value={40}>Converse</MenuItem>
-                        <MenuItem value={50}>Underarmour</MenuItem>
+                        <MenuItem value='Nike'>Nike</MenuItem>
+                        <MenuItem value='Adidas'>Adidas</MenuItem>
+                        <MenuItem value='Puma'>Puma</MenuItem>
+                        <MenuItem value='Converse'>Converse</MenuItem>
+                        <MenuItem value='Underarmour'>Underarmour</MenuItem>
                     </Select> 
                 </FormControl>
                 <TextField id="outlined-basic" label="Name" variant="outlined"  type="text" color="primary" maxRows ={'1'} required 
-                            error={nameError}  onChange={handleModelChange}
+                            error={nameError}  onChange={(e) => setName(e.target.value)}
                             sx={{
                             width :"45%",
                             marginRight: "5%",
@@ -253,9 +349,9 @@ function AddFootwear(){
                         error={typeError}     
                         onChange={(e) => setType(e.target.value)}
                     >
-                        <MenuItem value={10}>Sneaker</MenuItem>
-                        <MenuItem value={20}>Boot</MenuItem>
-                        <MenuItem value={30}>Flip-flop</MenuItem>
+                        <MenuItem value='Sneaker'>Sneaker</MenuItem>
+                        <MenuItem value='Boot'>Boot</MenuItem>
+                        <MenuItem value='Flip-Flop'>Flip-flop</MenuItem>
                     </Select> 
                 </FormControl>
 
@@ -291,9 +387,9 @@ function AddFootwear(){
                             label="Gender"  
                             error={genderError}      
                             onChange={(e) => setGender(e.target.value)}>
-                            <MenuItem value={10}>Male</MenuItem>
-                            <MenuItem value={20}>Female</MenuItem>
-                            <MenuItem value={30}>МОША</MenuItem>
+                            <MenuItem value='men'>Male</MenuItem>
+                            <MenuItem value='women'>Female</MenuItem>
+                            <MenuItem value='kids'>МОША</MenuItem>
                         </Select> 
                     </FormControl>
                 </DialogContent>

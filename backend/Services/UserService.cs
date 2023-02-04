@@ -35,6 +35,12 @@ namespace Services
             return await userCollection.Find(u => u.Id == id).FirstOrDefaultAsync();
         }
 
+        
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await userCollection.Find(u => u.email == email).FirstOrDefaultAsync();
+        }
+
         public async Task<string> UpdateUser(string userID, User newUser)
         {
             await userCollection.ReplaceOneAsync(u => u.Id == userID, newUser);

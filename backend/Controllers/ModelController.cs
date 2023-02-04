@@ -40,8 +40,30 @@ namespace backend.Controllers
             };
 
             string res = await modelService.CreateModel(m);
-            return Ok(res);
+
+            var _model = await modelService.GetModelByName(model.name);
+
+            var modelID = new {
+                id = _model.Id
+            };
+
+            return Ok(modelID);
         }
+        [Route("GetModelByName/{name}")]
+        [HttpGet]
+        public async Task<IActionResult> GetModelByName(string name)
+        {
+            var model = await modelService.GetModelByName(name);
+
+            var _model = new 
+            {
+                id = model.Id
+            };
+
+
+            return Ok(_model);
+        }
+
 
         [Route("GetModelGender/{gender}")]
         [HttpGet]

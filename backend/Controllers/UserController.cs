@@ -25,12 +25,42 @@ namespace backend.Controllers
             modelService = _modelService;
             footwearService = _footwearService;
         }
+        [Route("Login")]
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] User user)
+        {
+
+            if (user.email == null){return BadRequest("Invalid entry");}
+            
+            var existing =  await userService.GetUserByEmail(user.email);
+
+            if (existing == null){return BadRequest("Invalid email");}
+
+            if (existing.password != user.password){ return BadRequest(-1);}
+
+            var korisnik = new 
+            {
+                id = existing.Id
+            };
+
+
+            return Ok(korisnik);
+
+        }
+
 
         [Route("CreateUser")]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
-            User u = new User 
+
+            if (user == null){return BadRequest("Invalid entry");}
+            
+            var existing =  await userService.GetUserByEmail(user.email);
+
+            if (existing != null){return BadRequest("2");}
+
+            User newUser = new User 
             { 
               firstname = user.firstname,
               lastname = user.lastname,
@@ -43,8 +73,8 @@ namespace backend.Controllers
               postedItems = user.postedItems
             };
 
-            string res = await userService.CreateUser(u);
-            return Ok(res);
+            string res = await userService.CreateUser(newUser);
+            return Ok(1);
         }
 
         [Route("LikeTheModel/{userID}/{modelID}")]
