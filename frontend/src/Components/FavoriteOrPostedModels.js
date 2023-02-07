@@ -10,13 +10,13 @@ import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
-const userID = '63de7db75537cf532b690c02'; /*JSON.parse(window.localStorage.getItem('user-info'));*/
+const userID = '63d82978e8579d58ea82fddf'; /*JSON.parse(window.localStorage.getItem('user-info'));*/
 
-function FavoriteModels(){
+function FavoriteOrPostedModels({input}){
     const [models ,setModels] = useState(null);
 
     useEffect(() => {
-        fetch("/Model/GetFavoriteModels/"+ userID,
+        fetch("/Model/GetFavoriteOrPostedModels/"+ userID + "/" + input,
         {
             method:"GET",
             headers: {
@@ -123,4 +123,4 @@ const LikeTheModel = (id, like) =>{
     )
 }
 
-export default FavoriteModels;
+export default FavoriteOrPostedModels;

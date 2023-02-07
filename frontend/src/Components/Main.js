@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled, alpha, rgbToHex } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -25,14 +25,16 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import ShowModels from './ShowModels';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import FavoriteModels from './FavoriteModels';
+import FavoriteOrPostedModels from './FavoriteOrPostedModels';
 import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
 import AddFootwear from './AddFootwear';
 import ModelPage from './ModelPage';
 import CartPage from './CartPage';
 import { modelContext, cartItemsContext } from './ModelContext';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
+const userID = "63d82978e8579d58ea82fddf";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -91,7 +93,31 @@ const pages = [
     }
   ]
 
-function Main() {
+function Main(){
+  const [user ,setUser] = useState(null);
+
+    useEffect(() => {
+        fetch("/User/GetUser/"+ userID,
+        {
+            method:"GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+                setUser(data);
+            });
+      },[])
+
+      return(
+        <div>
+            {user && user != null && <MainRender user={user} />}
+        </div>
+       )
+}
+
+function MainRender({user}) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -121,35 +147,64 @@ function Main() {
     >
       <MenuItem>
       <IconButton sx={{width:"50px", height:"50px"}}
-      onClick={() => navigate("favorite")}>
-            <Badge badgeContent={5} sx={{ color:"black"}}>
+       onClick={localStorage.getItem('user-info') !== null
+       ? 
+       () => navigate("favorite")
+       :
+       () => navigate("/LoginPage")}>
+            <Badge badgeContent={user.favorites.length} sx={{ color:"black"}}>
                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
             </Badge>
             </IconButton>
         <p>Favorites</p>
       </MenuItem>
       <MenuItem>
-      <IconButton sx={{width:"50px", height:"50px"}}>
+      <IconButton
+      onClick={localStorage.getItem('user-info') !== null 
+      ?
+      () => navigate("/CartPage")
+      :
+      () => navigate("/LoginPage")} 
+      sx={{width:"50px", height:"50px"}}>
         <Badge badgeContent={2} sx={{color:"black"}}>
             <ShoppingBagOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
         </Badge>
        </IconButton>
         <p>Bag</p>
       </MenuItem>
-      <MenuItem onClick={() => navigate("/LoginPage")}>
-      <IconButton  sx={{width:"50px", height:"50px"}}>
-        <LoginOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
-       </IconButton >
-        <p> Login </p>
-      </MenuItem>
-      <MenuItem onClick={() => navigate("/SignUpPage")}>
-      <IconButton sx={{width:"50px", height:"50px"}}>
-        <AccountCircleOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
-       </IconButton>
-        <p>Signup</p>
-      </MenuItem>
+      {localStorage.getItem('user-info') === null
+      ?
+      <React.Fragment>
+        <MenuItem onClick={() => navigate("/LoginPage")}>
+        <IconButton  sx={{width:"50px", height:"50px"}}>
+          <LoginOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
+        </IconButton >
+          <p> Login </p>
+        </MenuItem>
+        <MenuItem onClick={() => navigate("/SignUpPage")}>
+        <IconButton sx={{width:"50px", height:"50px"}}>
+          <AccountCircleOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
+        </IconButton>
+          <p>Signup</p>
+        </MenuItem>
+      </React.Fragment>
+      :
+      <MenuItem onClick={() => navigate("posted")}>
+        <IconButton sx={{width:"50px", height:"50px"}}>
+          <PostAddIcon sx={{width:"35px", height:"35px", color:"black"}}/>
+        </IconButton>
+          <p>Posted items</p>
+        </MenuItem>
+    }
       <MenuItem>
-        <IconButton size="large">
+        <IconButton
+        onClick={localStorage.getItem('user-info') !== null 
+        ?
+        () => navigate("/AddFootwear")
+        :
+        () => navigate("/LoginPage")
+        }
+        size="large">
           <AddIcon sx={{ color:"black" }}/>
         </IconButton>
         <p>Add footwear</p>
@@ -264,10 +319,19 @@ function Main() {
                 <Grid position="relative" bottom="45px"
                 sm={12} md={12}>
                   <Tooltip title="Add footwear">
-                    <IconButton size="small" onClick={() => navigate("/AddFootwear")}>
+                    <IconButton size="small" 
+                    onClick={localStorage.getItem('user-info') !== null 
+                    ?
+                    () => navigate("/AddFootwear")
+                    :
+                    () => navigate("/LoginPage")
+                    }>
                       <AddIcon sx={{ color:"black" }}/>
                     </IconButton>
                   </Tooltip>
+                  {localStorage.getItem('user-info') === null 
+                  ?
+                  <React.Fragment>
                     <Link
                     onClick={() => navigate("/LoginPage")}
                     component="button"
@@ -280,15 +344,29 @@ function Main() {
                     component="button"
                     sx={{color:"black", fontSize:"16px",marginLeft:"5px"}}
                     underline="hover">
-                         Signup 
+                          Signup 
                     </Link>
+                  </React.Fragment>
+                  :
+                  <Link
+                  onClick={() => navigate("posted")}
+                  component="button"
+                  sx={{color:"black", fontSize:"16px"}}
+                  underline="hover">
+                    Posted items
+                  </Link>
+                  }
                 </Grid>
                 <Grid position="relative" bottom="10px"
                 sm={12} md={4}>
                     <Tooltip title="Favorites">
                         <IconButton sx={{width:"40px", height:"40px", marginRight:"8px"}}
-                        onClick={() => navigate("favorite")}>
-                            <Badge badgeContent={5} sx={{ color:"black"}}>
+                        onClick={localStorage.getItem('user-info') !== null
+                              ? 
+                              () => navigate("favorite")
+                              :
+                              () => navigate("/LoginPage")}>
+                            <Badge badgeContent={user.favorites.length} sx={{ color:"black"}}>
                                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
                             </Badge>
                         </IconButton>
@@ -298,7 +376,11 @@ function Main() {
                 sm={12} md={4}>
                     <Tooltip title="Bag">
                         <IconButton sx={{width:"40px", height:"40px"}}
-                        onClick={() => navigate("/CartPage")}>
+                        onClick={localStorage.getItem('user-info') !== null 
+                        ?
+                        () => navigate("/CartPage")
+                        :
+                        () => navigate("/LoginPage")}>
                             <Badge badgeContent={cartItems.length} sx={{color:"black"}}>
                                 <ShoppingBagOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
                             </Badge>
@@ -325,7 +407,8 @@ function Main() {
           <Route path="" element={<ShowModels gender={"men"} search={searchtext != "" ? searchtext : null} />} />
           <Route path="women" element={<ShowModels gender={"women"} search={searchtext != "" ? searchtext : null} />} />
           <Route path="kids" element={<ShowModels gender={"kids"} search={searchtext != "" ? searchtext : null} />} />
-          <Route path="favorite" element={<FavoriteModels />} />
+          <Route path="favorite" element={<FavoriteOrPostedModels input={"favorites"} />} />
+          <Route path="posted" element={<FavoriteOrPostedModels input={"posted"} />} />
           <Route path="LoginPage" element={<LoginPage />} />
           <Route path="SignUpPage" element={<SignUpPage />} />
           <Route path="AddFootwear" element={<AddFootwear />} />

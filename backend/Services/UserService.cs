@@ -23,10 +23,20 @@ namespace Services
             return "Uspesno";
         }
 
-        public async Task<List<string>> GetFavoriteModels(string userID)
+        public async Task<List<string>> GetFavoriteOrPostedModels(string userID, string input)
         {
             var user = await userCollection.Find(u => u.Id == userID).FirstOrDefaultAsync();
-            var list = user.favorites;
+            var list = new List<string>();
+
+            if(input.Equals("favorites"))
+            {
+                list = user.favorites;
+            }
+            else if(input.Equals("posted"))
+            {
+                list = user.postedItems;
+            }
+            
             return list;
         }
 

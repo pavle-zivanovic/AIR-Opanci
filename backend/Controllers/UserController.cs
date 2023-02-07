@@ -181,17 +181,29 @@ namespace backend.Controllers
                 return BadRequest("Nepostojeci model!");
             }
 
-            for(int i=0; i<model.items.Count; i++)
+            if(model.items.Count != 0)
             {
-                await footwearService.DeleteFootwear(model.items[i]);
+                foreach(string i in model.items)
+                {
+                    await footwearService.DeleteFootwear(i);
+                }
             }
-
+            
             await modelService.DeleteModel(modelID);
 
             user.postedItems.Remove(modelID);
+            user.favorites.Remove(modelID);
             string res = await userService.UpdateUser(userID, user);
 
             return Ok(res);
+        }
+
+        [Route("GetUser/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            User u = await userService.GetUserByID(id);
+            return Ok(u);
         }
     }
 }

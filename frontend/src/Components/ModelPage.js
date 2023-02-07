@@ -41,14 +41,14 @@ const model = {
 
 function ModelPage(){
 
-    useEffect(() => {
-
-    },[selectedModel])
-
     const navigate = useNavigate();
     let [selectedItem, setSelectedItem] = React.useState(null);
     const {selectedModel, setSelectedModel} = useContext(modelContext);
     const {cartItems, setCartItems} = useContext(cartItemsContext);
+
+    useEffect(() => {
+
+    },[selectedModel])
 
     return(
         <div className='ModelPage'>

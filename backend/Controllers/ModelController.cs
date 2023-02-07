@@ -73,16 +73,16 @@ namespace backend.Controllers
             return Ok(list);
         }
 
-        [Route("GetFavoriteModels/{userID}")]
+        [Route("GetFavoriteOrPostedModels/{userID}/{input}")]
         [HttpGet]
-        public async Task<IActionResult> GetFavoriteModels(string userID)
+        public async Task<IActionResult> GetFavoriteOrPostedModels(string userID, string input)
         {
             if(userID.Length < 24 || userID.Length > 24)
             {
                 return BadRequest("Nevalidan userID!");
             }
             
-            var modelsID = await userService.GetFavoriteModels(userID);
+            var modelsID = await userService.GetFavoriteOrPostedModels(userID, input);
             List<Model> models = new List<Model>();
 
             for(int i=0; i<modelsID.Count; i++)

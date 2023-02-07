@@ -238,6 +238,10 @@ const DeleteModel = (id) =>{
           {
             alert("Niste u mogucnosti da obrisete ovaj model obuce!");
           }
+          else
+          {
+            window.location.reload(true)
+          }
       });
 }
 
@@ -301,11 +305,11 @@ const DeleteModel = (id) =>{
                 <Grid xs={6} sm={4} md={3}>
                     <Card sx={{ maxWidth: 300 }}
                     key={index}
-                    onClick={() => {navigate("/ModelPage"); setSelectedModel(model_);}}
                     >
                         <CardMedia
                             sx={{ height: 140 }}
                             image = {"../Images/" + model.image}
+                            onClick={() => {navigate("/ModelPage"); setSelectedModel(model_);}}
                         />
                         <Typography 
                             variant="h7" 
@@ -333,12 +337,22 @@ const DeleteModel = (id) =>{
                         </CardContent>
                         <CardActions>
                             <IconButton sx={{width:"30px", height:"30px"}}
-                            onClick={() => LikeTheModel(model.id, model.users.includes(userID) ? false : true)}>
+                            onClick={
+                            localStorage.getItem('user-info') !== null 
+                            ?
+                            () => LikeTheModel(model.id, model.users.includes(userID) ? false : true)
+                            :
+                            () => alert("Morate da se ulogujete!")}>
                                 <FavoriteIcon sx={{width:"27px", height:"27px",
                               color:model.users.includes(userID) ? "red" : "black"}} />
                             </IconButton>
                             <IconButton sx={{width:"30px", height:"30px"}}
-                            onClick={()=>DeleteModel(model.id)}>
+                            onClick={
+                            localStorage.getItem('user-info') !== null
+                            ?
+                            ()=>DeleteModel(model.id)
+                            :
+                            () => alert("Morate da se ulogujete!")}>
                                 <DeleteIcon sx={{width:"27px", height:"27px", color:"black"}} />
                             </IconButton>
                         </CardActions>
