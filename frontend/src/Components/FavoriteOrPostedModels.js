@@ -26,7 +26,6 @@ function FavoriteOrPostedModels({input}){
         .then((res) => res.json())
         .then((data) => {
                 setModels(data);
-                console.log(data)
             });
       },[])
 

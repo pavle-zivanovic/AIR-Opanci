@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled, alpha, rgbToHex } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -95,7 +95,46 @@ const pages = [
 function Main() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [user, setUser] = useState(null);
 
+  useEffect(() =>{
+    if(localStorage.getItem('user-info') != null)
+    {
+      fetch("/User/GetUser/"+localStorage.getItem('user-info').substring(1, localStorage.getItem('user-info').length-1),
+        {
+            method:"GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+              setUser(data);
+        });
+    }
+
+    window.addEventListener('storage', async () =>{
+
+      const id = localStorage.getItem('user-info');
+      console.log(id);
+
+      if(id != null)
+      {
+        await fetch("/User/GetUser/"+id.substring(1, id.length-1),
+        {
+            method:"GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+              setUser(data);
+        });
+      }
+    })
+  },[])
+  
   const [mobileMoreAnchorElRight, setMobileMoreAnchorElRight] = useState(null);
   const isMobileMenuOpenRight = Boolean(mobileMoreAnchorElRight);
   const handleMobileMenuCloseRight = () => {
@@ -104,6 +143,8 @@ function Main() {
   const handleMobileMenuOpenRight = (event) => {
     setMobileMoreAnchorElRight(event.currentTarget);
   };
+
+  const [cartItems, setCartItems] = useState([]);
 
   const renderMobileMenuRight = (
     <Menu
@@ -127,7 +168,7 @@ function Main() {
        () => navigate("favorite")
        :
        () => navigate("/LoginPage")}>
-            <Badge badgeContent={5} sx={{ color:"black"}}>
+            <Badge badgeContent={user!=null?user.favorites.length:null} sx={{ color:"black"}}>
                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
             </Badge>
             </IconButton>
@@ -141,7 +182,7 @@ function Main() {
       :
       () => navigate("/LoginPage")} 
       sx={{width:"50px", height:"50px"}}>
-        <Badge badgeContent={2} sx={{color:"black"}}>
+        <Badge badgeContent={cartItems.length} sx={{color:"black"}}>
             <ShoppingBagOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
         </Badge>
        </IconButton>
@@ -149,7 +190,7 @@ function Main() {
       </MenuItem>
       {localStorage.getItem('user-info') === null
       ?
-      <React.Fragment>
+      <div>
         <MenuItem onClick={() => navigate("/LoginPage")}>
         <IconButton  sx={{width:"50px", height:"50px"}}>
           <LoginOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
@@ -162,7 +203,7 @@ function Main() {
         </IconButton>
           <p>Signup</p>
         </MenuItem>
-      </React.Fragment>
+      </div>
       :
       <MenuItem onClick={() => navigate("posted")}>
         <IconButton sx={{width:"50px", height:"50px"}}>
@@ -231,7 +272,7 @@ function Main() {
   }
 
   const [selectedModel, setSelectedModel] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
+
 
   return (
     <Box sx={{ flexGrow: 1, width:"100%" }}>
@@ -341,7 +382,7 @@ function Main() {
                               () => navigate("favorite")
                               :
                               () => navigate("/LoginPage")}>
-                            <Badge badgeContent={5} sx={{ color:"black"}}>
+                            <Badge badgeContent={user!=null?user.favorites.length:null} sx={{ color:"black"}}>
                                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
                             </Badge>
                         </IconButton>

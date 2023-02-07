@@ -63,7 +63,8 @@ async function Login(){
       else{
         
         window.localStorage.setItem('user-info',JSON.stringify(a.id));
-        console.log(a);
+        window.dispatchEvent(new Event('storage'));
+        //console.log(a);
         navigate('/');
         
       }
