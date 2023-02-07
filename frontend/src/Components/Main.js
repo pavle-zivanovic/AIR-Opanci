@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { styled, alpha, rgbToHex } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -34,7 +34,6 @@ import CartPage from './CartPage';
 import { modelContext, cartItemsContext } from './ModelContext';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 
-const userID = "63d82978e8579d58ea82fddf";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -93,31 +92,7 @@ const pages = [
     }
   ]
 
-function Main(){
-  const [user ,setUser] = useState(null);
-
-    useEffect(() => {
-        fetch("/User/GetUser/"+ userID,
-        {
-            method:"GET",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        .then((res) => res.json())
-        .then((data) => {
-                setUser(data);
-            });
-      },[])
-
-      return(
-        <div>
-            {user && user != null && <MainRender user={user} />}
-        </div>
-       )
-}
-
-function MainRender({user}) {
+function Main() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -152,7 +127,7 @@ function MainRender({user}) {
        () => navigate("favorite")
        :
        () => navigate("/LoginPage")}>
-            <Badge badgeContent={user.favorites.length} sx={{ color:"black"}}>
+            <Badge badgeContent={5} sx={{ color:"black"}}>
                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
             </Badge>
             </IconButton>
@@ -366,7 +341,7 @@ function MainRender({user}) {
                               () => navigate("favorite")
                               :
                               () => navigate("/LoginPage")}>
-                            <Badge badgeContent={user.favorites.length} sx={{ color:"black"}}>
+                            <Badge badgeContent={5} sx={{ color:"black"}}>
                                 <FavoriteBorderIcon sx={{width:"35px", height:"35px", color:"black"}} />
                             </Badge>
                         </IconButton>
