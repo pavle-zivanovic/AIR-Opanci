@@ -1,0 +1,75 @@
+
+/* For Mobile */
+@media screen and (max-width: 540px) {
+    .ModelPage  {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .LeftPart{
+    }
+    
+    .RightPart {
+        margin-top: 200px;
+    }
+
+    .SizeCard:hover {
+        background-color: rgb(27, 92, 255);
+      }
+
+    .AddToCartIcon {
+        color: rgb(0, 0, 0);
+        font-size: large;
+    }  
+}
+
+/* For Tablets */
+@media screen and (min-width: 540px) and (max-width: 1550px) {
+    .ModelPage  {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .LeftPart{
+    }
+    
+    .RightPart {
+        margin-top: 200px;
+    }
+
+    .SizeCard:hover {
+        background-color: rgb(27, 92, 255);
+      }
+
+    .AddToCartIcon {
+        color: rgb(0, 0, 0);
+        font-size: large;
+    }  
+}
+
+/* For Other */
+@media screen and (min-width: 1550px) {
+    .ModelPage  {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .LeftPart{
+    }
+    
+    .RightPart {
+        margin-top: 200px;
+    }
+
+    .SizeCard:hover {
+        background-color: rgb(27, 92, 255);
+      }
+
+    .AddToCartIcon {
+        color: rgb(0, 0, 0);
+        font-size: large;
+    }  
+
+}
+
+

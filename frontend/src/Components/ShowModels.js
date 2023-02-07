@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {useEffect, useState} from "react";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -18,6 +18,8 @@ import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { createTheme, rgbToHex, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import { modelContext } from './ModelContext';
 
 const blackTheme = createTheme({
   palette: {
@@ -96,8 +98,23 @@ const MenuProps = {
   },
 };
 
+const model_ = {
+  id:"63e0fecd36412978e977b298",
+  brand:"Nike",
+  name:"AIR Force Yellow",
+  type:"Sneaker",
+  price:22000,
+  items:[32,33,34,35,36,37],
+  image:"../Images/nike.jpg",
+  discount:20,
+  gender:"men",
+  user:"jzlnikola",
+  users:[]
+}
+
 function ShowModelsRender({models, setModels, gender}){
 
+  const navigate = useNavigate();
   let [category, setCategory] = React.useState([]);
   let [brand, setBrand] = React.useState([]);
   let [price, setPrice] = React.useState([]);
@@ -224,6 +241,8 @@ const DeleteModel = (id) =>{
       });
 }
 
+
+    const {selectedModel, setSelectedModel} = useContext(modelContext);
     return(
         <Box sx={{ flexGrow: 1,
             width:"89%", 
@@ -282,6 +301,7 @@ const DeleteModel = (id) =>{
                 <Grid xs={6} sm={4} md={3}>
                     <Card sx={{ maxWidth: 300 }}
                     key={index}
+                    onClick={() => {navigate("/ModelPage"); setSelectedModel(model_);}}
                     >
                         <CardMedia
                             sx={{ height: 140 }}

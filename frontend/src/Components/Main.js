@@ -29,6 +29,9 @@ import FavoriteModels from './FavoriteModels';
 import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
 import AddFootwear from './AddFootwear';
+import ModelPage from './ModelPage';
+import CartPage from './CartPage';
+import { modelContext, cartItemsContext } from './ModelContext';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -197,6 +200,9 @@ function Main() {
     setSearchtext(e.target.value);
   }
 
+  const [selectedModel, setSelectedModel] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+
   return (
     <Box sx={{ flexGrow: 1, width:"100%" }}>
       <AppBar 
@@ -291,8 +297,9 @@ function Main() {
                 <Grid position="relative" bottom="10px" right="6px"
                 sm={12} md={4}>
                     <Tooltip title="Bag">
-                        <IconButton sx={{width:"40px", height:"40px"}}>
-                            <Badge badgeContent={2} sx={{color:"black"}}>
+                        <IconButton sx={{width:"40px", height:"40px"}}
+                        onClick={() => navigate("/CartPage")}>
+                            <Badge badgeContent={cartItems.length} sx={{color:"black"}}>
                                 <ShoppingBagOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
                             </Badge>
                         </IconButton>
@@ -312,15 +319,21 @@ function Main() {
       </AppBar>
       {renderMobileMenuRight}
       {renderMobileMenuLeft}
-      <Routes>
-        <Route path="" element={<ShowModels gender={"men"} search={searchtext != "" ? searchtext : null} />} />
-        <Route path="women" element={<ShowModels gender={"women"} search={searchtext != "" ? searchtext : null} />} />
-        <Route path="kids" element={<ShowModels gender={"kids"} search={searchtext != "" ? searchtext : null} />} />
-        <Route path="favorite" element={<FavoriteModels />} />
-        <Route path="LoginPage" element={<LoginPage />} />
-        <Route path="SignUpPage" element={<SignUpPage />} />
-        <Route path="AddFootwear" element={<AddFootwear />} />
-      </Routes>
+      <modelContext.Provider value={{selectedModel, setSelectedModel}}>
+      <cartItemsContext.Provider value={{cartItems, setCartItems}}>
+        <Routes>
+          <Route path="" element={<ShowModels gender={"men"} search={searchtext != "" ? searchtext : null} />} />
+          <Route path="women" element={<ShowModels gender={"women"} search={searchtext != "" ? searchtext : null} />} />
+          <Route path="kids" element={<ShowModels gender={"kids"} search={searchtext != "" ? searchtext : null} />} />
+          <Route path="favorite" element={<FavoriteModels />} />
+          <Route path="LoginPage" element={<LoginPage />} />
+          <Route path="SignUpPage" element={<SignUpPage />} />
+          <Route path="AddFootwear" element={<AddFootwear />} />
+          <Route path="ModelPage" element={<ModelPage />} />
+          <Route path="CartPage" element={<CartPage />} />
+        </Routes>
+      </cartItemsContext.Provider>
+      </modelContext.Provider>
     </Box>
   );
 }
