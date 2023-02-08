@@ -10,10 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
-const userID = '63d82978e8579d58ea82fddf'; /*JSON.parse(window.localStorage.getItem('user-info'));*/
-
 function FavoriteOrPostedModels({input}){
     const [models ,setModels] = useState(null);
+    const [userID, setUserID] = useState(JSON.parse(window.localStorage.getItem('user-info')));
 
     useEffect(() => {
         fetch("/Model/GetFavoriteOrPostedModels/"+ userID + "/" + input,
@@ -31,12 +30,12 @@ function FavoriteOrPostedModels({input}){
 
       return(
         <div>
-            {models && models != null && <FavoriteModelsRender models={models} />}
+            {models && models != null && userID && userID != null && <FavoriteModelsRender models={models} userID={userID}/>}
         </div>
        )
 }
 
-function FavoriteModelsRender({models}){
+function FavoriteModelsRender({models, userID}){
 
 let modelID = null;
 

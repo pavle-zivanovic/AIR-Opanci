@@ -29,10 +29,9 @@ const blackTheme = createTheme({
   },
 });
 
-const userID = "63d82978e8579d58ea82fddf";
-
 function ShowModels({gender, search}){
     const [models ,setModels] = useState(null);
+    const [userID, setUserID] = useState(JSON.parse(window.localStorage.getItem('user-info')));
 
     useEffect(() => {
         fetch("/Model/GetModelGender/"+gender,
@@ -82,7 +81,7 @@ function ShowModels({gender, search}){
 
       return(
         <div>
-            {models && models != null && <ShowModelsRender models={models} setModels={setModels} gender={gender}/>}
+            {models && models != null && <ShowModelsRender models={models} setModels={setModels} gender={gender} userID={userID}/>}
         </div>
        )
 }
@@ -112,7 +111,7 @@ const model_ = {
   users:[]
 }
 
-function ShowModelsRender({models, setModels, gender}){
+function ShowModelsRender({models, setModels, gender, userID}){
 
   const navigate = useNavigate();
   let [category, setCategory] = React.useState([]);
