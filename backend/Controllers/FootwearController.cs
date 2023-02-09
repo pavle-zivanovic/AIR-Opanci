@@ -61,6 +61,12 @@ namespace backend.Controllers
             }
 
             var f = await footwearService.GetFootwearByID(id);
+
+            if(f == null)
+            {
+                return BadRequest("Nepostojeci footwear!");
+            }
+
             return Ok(f);
         }
 
@@ -74,6 +80,12 @@ namespace backend.Controllers
             }
 
             var f = await footwearService.GetFootwearFromModel(modelID);
+
+            if(f == null)
+            {
+                return BadRequest("Nepostojeci footwear!");
+            }
+            
             return Ok(f);
         }
     }

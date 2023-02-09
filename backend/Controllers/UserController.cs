@@ -208,6 +208,12 @@ namespace backend.Controllers
             }
 
             User u = await userService.GetUserByID(id);
+
+            if(u == null)
+            {
+                return BadRequest("Nepostojeci user!");
+            }
+            
             return Ok(u);
         }
     }
