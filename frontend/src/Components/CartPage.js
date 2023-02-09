@@ -92,10 +92,12 @@ function CartPage(){
 
     async function createPurchase(){
 
+        const userID = localStorage.getItem('user-info')
         const purchase = {
-            user: localStorage.getItem('user-info'),
+            user: userID.substring(0, userID.length - 1).substring(1),
             footwear: cartItems.map((item)=> item.item.id),
-            date : "Januar 9 2023"
+            date : "Januar 9 2023",
+            cena : cartItems.reduce((sum, item)=>{return sum + (item.model.discount==0? (item.model.price) : (item.model.price*(100-item.model.discount)/100))}, 0)
        }
        console.log(purchase);
     
@@ -108,6 +110,7 @@ function CartPage(){
             body : JSON.stringify(purchase)
           });
 
+          setCartItems([]);
           alert("uspesna kupovina")
     }
 

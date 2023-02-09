@@ -20,7 +20,7 @@ namespace Services
         public async Task<string> CreatePurchase(Purchase purchase)
         {
             await purchaseCollection.InsertOneAsync(purchase);
-            return "Uspesno";
+            return purchase.Id;
         }
 
     }

@@ -84,7 +84,7 @@ function ModelPage(){
                 {selectedModel.discount!=0? <Typography style={{fontSize:'15px', marginLeft:'50px'}}>{selectedModel.discount+"% popusta"}</Typography>:null}
                 <Grid container spacing={2} style={{marginLeft:'38px', marginTop:'20px'}}>
                     {footwear!=null? footwear.map((item, index) => (
-                        footwear.map(f => f.size).filter((item, index_)=>index_<index).includes(item.size)==false?(
+                        (footwear.map(f => f.size).filter((item, index_)=>index_<index).includes(item.size)==false && cartItems.map(f => f.item.id).includes(item.id)==false)?(
                         <Grid xs={3} sm={3} md={3}>
                             <Card className='SizeCard' sx={{backgroundColor: (selectedItem!=null && item.id==selectedItem.item.id)?'rgb(50, 145, 255)':'black', textAlign:'center', color:'white', borderRadius: '25px', maxWidth: 300 }}
                             key={index}

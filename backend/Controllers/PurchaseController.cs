@@ -34,7 +34,8 @@ namespace backend.Controllers
             { 
               user = purchase.user,
               footwear = purchase.footwear,
-              date = purchase.date
+              date = purchase.date,
+              cena = purchase.cena
             };
 
             string res = await purchaseService.CreatePurchase(p);
@@ -45,10 +46,7 @@ namespace backend.Controllers
             }
 
             var u = await userService.GetUserByID(purchase.user);
-
-            for(int i=0; i<purchase.footwear.Count; i++){
-               u.items.Add(purchase.footwear[i]);
-            }
+            u.items.Add(res);  
             await userService.UpdateUser(purchase.user, u);
 
             return Ok();

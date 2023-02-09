@@ -17,5 +17,7 @@ namespace Models
         public List<string> footwear { get; set; }
 
         public string date { get; set; }
+
+        public int cena { get; set; }
     }
 }
