@@ -178,11 +178,11 @@ function Main() {
       <IconButton
       onClick={localStorage.getItem('user-info') !== null 
       ?
-      () => navigate("/CartPage")
+      () => {if(cartItems!=null && cartItems.length>0) navigate("/CartPage")}
       :
       () => navigate("/LoginPage")} 
       sx={{width:"50px", height:"50px"}}>
-        <Badge badgeContent={cartItems.length} sx={{color:"black"}}>
+        <Badge badgeContent={cartItems!=null? cartItems.length: 0} sx={{color:"black"}}>
             <ShoppingBagOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
         </Badge>
        </IconButton>
@@ -394,10 +394,10 @@ function Main() {
                         <IconButton sx={{width:"40px", height:"40px"}}
                         onClick={localStorage.getItem('user-info') !== null 
                         ?
-                        () => navigate("/CartPage")
+                        () => {if(cartItems!=null && cartItems.length>0) navigate("/CartPage")}
                         :
                         () => navigate("/LoginPage")}>
-                            <Badge badgeContent={cartItems.length} sx={{color:"black"}}>
+                            <Badge badgeContent={cartItems!=null? cartItems.length: 0} sx={{color:"black"}}>
                                 <ShoppingBagOutlinedIcon sx={{width:"35px", height:"35px", color:"black"}}/>
                             </Badge>
                         </IconButton>

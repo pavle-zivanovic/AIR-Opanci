@@ -86,6 +86,19 @@ function CartPage(){
 
     const {cartItems, setCartItems} = useContext(cartItemsContext);
 
+    window.addEventListener("beforeunload", (event) => {
+        window.localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        
+    });
+
+    useEffect(() => {
+        if(localStorage.getItem('cartItems')!=null && cartItems.length==0)
+        {
+            setCartItems(JSON.parse(localStorage.getItem('cartItems')));
+            window.localStorage.setItem('cartItems', null);
+        }
+    },[])
+
     useEffect(() => {
         console.log(cartItems)
     },[cartItems])
@@ -140,7 +153,7 @@ function CartPage(){
                     <Typography style={{fontSize:'50px', marginLeft:'50px'}}>{item.model.brand + " " + item.model.name + " | Size " + item.item.size}</Typography>
                     <Typography style={{fontSize:'25px', marginLeft:'50px'}}>{(item.model.discount==0? (item.model.price) : (item.model.price*(100-item.model.discount)/100)) + " RSD"}</Typography>
                     {item.model.discount!=0? <Typography style={{fontSize:'15px', marginLeft:'50px'}}>{item.model.discount+"% popusta"}</Typography>:null}
-                    <Card sx={{marginLeft:'38px', marginTop:'20px', backgroundColor:'rgb(255, 65, 27)',textAlign:'center', color:'white', borderRadius: '25px' }}
+                    <Card sx={{marginLeft:'38px', marginTop:'20px', marginBottom:'50px', backgroundColor:'rgb(255, 65, 27)',textAlign:'center', color:'white', borderRadius: '25px' }}
                     onClick={() => {setCartItems(cartItems.filter((item_, index_) => index !== index_));}}
                     >
                         <Typography style={{fontSize:'25px'}}> Remove from card </Typography>

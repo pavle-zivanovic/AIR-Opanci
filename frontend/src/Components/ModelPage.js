@@ -82,9 +82,9 @@ function ModelPage(){
                 <Typography style={{fontSize:'50px', marginLeft:'50px'}}>{selectedModel.brand + " " + selectedModel.name}</Typography>
                 <Typography style={{fontSize:'25px', marginLeft:'50px'}}>{(selectedModel.discount==0? (selectedModel.price) : (selectedModel.price*(100-selectedModel.discount)/100)) + " RSD"}</Typography>
                 {selectedModel.discount!=0? <Typography style={{fontSize:'15px', marginLeft:'50px'}}>{selectedModel.discount+"% popusta"}</Typography>:null}
-                <Grid container spacing={2} style={{marginLeft:'38px', marginTop:'20px'}}>
+                <Grid container spacing={2} style={{marginLeft:'38px', marginBottom:'50px', marginTop:'20px'}}>
                     {footwear!=null? footwear.map((item, index) => (
-                        (footwear.map(f => f.size).filter((item, index_)=>index_<index).includes(item.size)==false && cartItems.map(f => f.item.id).includes(item.id)==false)?(
+                        (footwear.map(f => f.size).filter((item, index_)=>index_<index).includes(item.size)==false && (cartItems==null || cartItems.map(f => f.item.id).includes(item.id)==false))?(
                         <Grid xs={3} sm={3} md={3}>
                             <Card className='SizeCard' sx={{backgroundColor: (selectedItem!=null && item.id==selectedItem.item.id)?'rgb(50, 145, 255)':'black', textAlign:'center', color:'white', borderRadius: '25px', maxWidth: 300 }}
                             key={index}
@@ -96,7 +96,7 @@ function ModelPage(){
                     )):null}
                 </Grid>
                 {selectedItem!=null?(
-                <Card sx={{marginLeft:'38px', marginTop:'20px', backgroundColor:'rgb(50, 145, 255)',textAlign:'center', color:'white', borderRadius: '25px' }}
+                <Card sx={{marginLeft:'38px', marginTop:'20px', marginBottom:'50px', backgroundColor:'rgb(50, 145, 255)',textAlign:'center', color:'white', borderRadius: '25px' }}
                     onClick={() => {setCartItems(oldArray => [...oldArray, selectedItem]); alert("dodali ste artikl u korpu"); setFootwear(footwear.filter((item) => item.id !== selectedItem.item.id)); setSelectedItem(null);}}
                     >
                     <Typography style={{fontSize:'25px'}}> + Add to cart </Typography>

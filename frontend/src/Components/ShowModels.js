@@ -19,7 +19,7 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { createTheme, rgbToHex, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { modelContext } from './ModelContext';
+import { cartItemsContext, modelContext } from './ModelContext';
 
 const blackTheme = createTheme({
   palette: {
@@ -244,6 +244,15 @@ const DeleteModel = (id) =>{
       });
 }
 
+    /*const {cartItems, setCartItems} = useContext(cartItemsContext);
+
+    useEffect(() => {
+      if(localStorage.getItem('cartItems')!=null && cartItems.length==0)
+      {
+          setCartItems(JSON.parse(localStorage.getItem('cartItems')));
+          window.localStorage.setItem('cartItems', null);
+      }
+    },[])*/
 
     const {selectedModel, setSelectedModel} = useContext(modelContext);
     return(
