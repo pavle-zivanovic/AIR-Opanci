@@ -150,9 +150,14 @@ namespace Services
         }
 
         
-        public async Task<List<Model>> GetAllModels()
+        public async Task<List<Model>> GetAllModelsByUserID(string userID)
         {
-            return await modelCollection.Find(m => true).ToListAsync();
+             return await modelCollection.Find(m => m.user == userID).ToListAsync();    
+        }
+
+        public async Task<Model> GetModelByUserID(string userID)
+        {
+             return await modelCollection.Find(m => m.user == userID).FirstOrDefaultAsync();    
         }
     }
 }

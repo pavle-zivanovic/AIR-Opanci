@@ -33,7 +33,7 @@ function AddFootwear(){
     const [allModels , setAllModels] = useState([])
 
     async function getAllModels(){
-        await fetch("/Model/GetAllModels",
+        await fetch("/Model/GetAllModelsByUserID/" + user,
         {
             method:"GET",
             headers:{
@@ -82,7 +82,7 @@ function AddFootwear(){
         }
         if (brand && name && type && price && image && gender)
         {
-            alert("POSTAVLJENO")
+            
             addModel()
             setOpen(false)
         }
@@ -117,8 +117,15 @@ function AddFootwear(){
             body : JSON.stringify(model)
           });
           let a = await result.json();
-          console.log(a.id);
-          setModelID(a.id);  
+          if ( a === -1){
+            alert("Na ovaj model mozete samo da dodate novu patiku !")
+          }
+          else{
+            console.log(a.id);
+            setModelID(a.id);
+            alert("USPESNO") 
+          }
+
        }
        catch (error)
        {
@@ -156,7 +163,7 @@ function AddFootwear(){
     }
 
     const handlePost = () => {
-        alert("POSTAVLJENO")
+        alert("USPESNO")
 
         if (size[0] === ''){
             setSizeError(true);

@@ -26,6 +26,18 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateModel([FromBody] Model model)
         {
+
+            var _m = await modelService.GetModelByUserID(model.user);
+
+            if ( _m != null ) 
+            {
+                if ( _m.name == model.name )
+                { 
+                    return BadRequest(-1);
+                }; 
+            };
+
+
             Model m = new Model 
             { 
               brand = model.brand,
@@ -117,11 +129,18 @@ namespace backend.Controllers
             return Ok(models);
         }
 
-        [Route("GetAllModels")]
+        [Route("GetAllModelsByUserID/{userID}")]
         [HttpGet]
-        public async Task<IActionResult> GetAllModels()
+        public async Task<IActionResult> GetAllModelsByUserID(string userID)
         {
-            var models = await modelService.GetAllModels();
+
+            if(userID.Length < 24 || userID.Length > 24)
+            {
+                return BadRequest("Nevalidan userID!");
+            }
+
+            var models = await modelService.GetAllModelsByUserID(userID);
+
             return Ok(models);
         }
     }
