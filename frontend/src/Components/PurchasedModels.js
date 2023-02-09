@@ -1,21 +1,18 @@
 import React from 'react';
 import {useEffect, useState} from "react";
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
-function FavoriteOrPostedModels({input}){
+function PurchasedModels(){
     const [models ,setModels] = useState(null);
     const [userID, setUserID] = useState(JSON.parse(window.localStorage.getItem('user-info')));
 
     useEffect(() => {
-        fetch("/Model/GetFavoriteOrPostedModels/"+ userID + "/" + input,
+        fetch("/Purchase/GetUserPurchase/"+ userID ,
         {
             method:"GET",
             headers: {
@@ -30,41 +27,12 @@ function FavoriteOrPostedModels({input}){
 
       return(
         <div>
-            {models && models != null && userID && userID != null && <FavoriteModelsRender models={models} userID={userID}/>}
+            {models && models != null && userID && userID != null && <PurchasedModelsRender models={models}/>}
         </div>
        )
 }
 
-function FavoriteModelsRender({models, userID}){
-
-let modelID = null;
-
-const LikeTheModel = (id, like) =>{
-  modelID = id;
-
-  if(like == true)
-  {
-    fetch("/User/LikeTheModel/"+userID+"/"+modelID,
-    {
-        method:"PUT",
-        headers:{
-            "Content-Type":"application/json"
-        },
-    })
-  }
-  else
-  {
-    fetch("/User/UnlikeTheModel/"+userID+"/"+modelID,
-    {
-        method:"PUT",
-        headers:{
-            "Content-Type":"application/json"
-        },
-    })
-  }
-
-  window.location.reload(true)
-}
+function PurchasedModelsRender({models}){
 
     return(
         <Box sx={{ flexGrow: 1,
@@ -83,13 +51,13 @@ const LikeTheModel = (id, like) =>{
                             image = {model.image}
                         />
                         <Typography 
-                            variant="h7" 
+                            variant="h6"
                             component="div"
                             textAlign="end" 
-                            color="red"
+                            fontWeight="bold"
                         >
-                            {model.discount != 0 ? model.discount+"%" : null}
-                            </Typography>
+                            {model.price} RSD
+                        </Typography>
                         <CardContent>
                             <Typography 
                             gutterBottom 
@@ -103,16 +71,15 @@ const LikeTheModel = (id, like) =>{
                             component="div"
                             textAlign="center" 
                             fontWeight="bold">
-                            {model.price} RSD
+                            size: {model.size}
                             </Typography>
                         </CardContent>
-                        <CardActions>
-                            <IconButton sx={{width:"30px", height:"30px"}}
-                            onClick={() => LikeTheModel(model.id, model.users.includes(userID) ? false : true)}>
-                                <FavoriteIcon sx={{width:"27px", height:"27px",
-                                color:model.users.includes(userID) ? "red" : "black"}} />
-                            </IconButton>
-                        </CardActions>
+                        <Typography 
+                            variant="h7" 
+                            fontWeight="bold"
+                        >
+                            {model.date}
+                        </Typography>
                     </Card>
                 </Grid>
                 ))}
@@ -121,4 +88,4 @@ const LikeTheModel = (id, like) =>{
     )
 }
 
-export default FavoriteOrPostedModels;
+export default PurchasedModels;

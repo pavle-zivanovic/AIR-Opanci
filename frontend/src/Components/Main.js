@@ -33,6 +33,7 @@ import ModelPage from './ModelPage';
 import CartPage from './CartPage';
 import { modelContext, cartItemsContext } from './ModelContext';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import PurchasedModels from './PurchasedModels';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -364,13 +365,22 @@ function Main() {
                     </Link>
                   </React.Fragment>
                   :
-                  <Link
-                  onClick={() => navigate("posted")}
-                  component="button"
-                  sx={{color:"black", fontSize:"16px"}}
-                  underline="hover">
-                    Posted items
-                  </Link>
+                  <React.Fragment>
+                    <Link
+                    onClick={() => navigate("posted")}
+                    component="button"
+                    sx={{color:"black", fontSize:"16px"}}
+                    underline="hover">
+                      Posted |
+                    </Link>
+                    <Link
+                    onClick={() => navigate("purchased")}
+                    component="button"
+                    sx={{color:"black", fontSize:"16px",marginLeft:"5px"}}
+                    underline="hover">
+                      Purchased
+                    </Link>
+                  </React.Fragment>
                   }
                 </Grid>
                 <Grid position="relative" bottom="10px"
@@ -430,6 +440,7 @@ function Main() {
           <Route path="AddFootwear" element={<AddFootwear />} />
           <Route path="ModelPage" element={<ModelPage />} />
           <Route path="CartPage" element={<CartPage />} />
+          <Route path="purchased" element={<PurchasedModels />} />
         </Routes>
       </cartItemsContext.Provider>
       </modelContext.Provider>

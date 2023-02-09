@@ -4,9 +4,6 @@ import {InputLabel, Select ,MenuItem, FormControl }from '@mui/material';
 import { Dialog ,DialogActions,DialogContent ,DialogTitle} from '@mui/material';
 import {Button , TextField} from '@mui/material';
 import {OutlinedInput ,getStyles}  from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import Grid from '@mui/material/Unstable_Grid2';
-import Box from '@mui/material/Box';
 import '../Styles/AddFootwear.css';
 import { createTheme, rgbToHex, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -194,6 +191,23 @@ function AddFootwear(){
 
     
     const sizes = [
+        '18',
+        '19',
+        '20',
+        '21',
+        '22',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31',
+        '32',
+        '33',
+        '34',
         '35',
         '36',
         '37',
@@ -318,7 +332,9 @@ function AddFootwear(){
                         <MenuItem value='Adidas'>Adidas</MenuItem>
                         <MenuItem value='Puma'>Puma</MenuItem>
                         <MenuItem value='Converse'>Converse</MenuItem>
-                        <MenuItem value='Underarmour'>Underarmour</MenuItem>
+                        <MenuItem value='Reebok'>Reebok</MenuItem>
+                        <MenuItem value='New balance'>New balance</MenuItem>
+                        <MenuItem value='Asics'>Asics</MenuItem>
                     </Select> 
                 </FormControl>
                 <TextField id="outlined-basic" label="Name" variant="outlined"  type="text" color="primary" maxRows ={'1'} required 
@@ -345,9 +361,10 @@ function AddFootwear(){
                         error={typeError}     
                         onChange={(e) => setType(e.target.value)}
                     >
-                        <MenuItem value='Sneaker'>Sneaker</MenuItem>
-                        <MenuItem value='Boot'>Boot</MenuItem>
-                        <MenuItem value='Flip-Flop'>Flip-flop</MenuItem>
+                        <MenuItem value='sneakers'>sneakers</MenuItem>
+                        <MenuItem value='boots'>boots</MenuItem>
+                        <MenuItem value='shoes'>shoes</MenuItem>
+                        <MenuItem value='slippers'>slippers</MenuItem>
                     </Select> 
                 </FormControl>
 
@@ -383,9 +400,9 @@ function AddFootwear(){
                             label="Gender"  
                             error={genderError}      
                             onChange={(e) => setGender(e.target.value)}>
-                            <MenuItem value='men'>Male</MenuItem>
-                            <MenuItem value='women'>Female</MenuItem>
-                            <MenuItem value='kids'>МОША</MenuItem>
+                            <MenuItem value='men'>men</MenuItem>
+                            <MenuItem value='women'>women</MenuItem>
+                            <MenuItem value='kids'>kids</MenuItem>
                         </Select> 
                     </FormControl>
                 </DialogContent>

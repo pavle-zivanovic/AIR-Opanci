@@ -30,7 +30,8 @@ namespace backend.Controllers
             { 
               model = footwear.model,
               user = footwear.user, 
-              size = footwear.size
+              size = footwear.size,
+              status = footwear.status
             };
 
             string res = await footwearService.CreateFootwear(f);
@@ -67,6 +68,11 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFootwearFromModel(string modelID)
         {
+            if(modelID.Length < 24 || modelID.Length > 24)
+            {
+                return BadRequest("Nevalidan modelID!");
+            }
+
             var f = await footwearService.GetFootwearFromModel(modelID);
             return Ok(f);
         }

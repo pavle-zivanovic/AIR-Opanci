@@ -36,6 +36,7 @@ namespace backend.Controllers
               image = model.image,
               discount = model.discount,
               gender = model.gender,
+              user = model.user,
               users = model.users
             };
 
@@ -43,12 +44,18 @@ namespace backend.Controllers
 
             var _model = await modelService.GetModelByName(model.name);
 
+            var _user = await userService.GetUserByID(m.user);
+
             var modelID = new {
                 id = _model.Id
             };
 
+            _user.postedItems.Add(modelID.id);
+            await userService.UpdateUser(_user.Id, _user);
+
             return Ok(modelID);
         }
+
         [Route("GetModelByName/{name}")]
         [HttpGet]
         public async Task<IActionResult> GetModelByName(string name)

@@ -25,6 +25,7 @@ namespace backend.Controllers
             modelService = _modelService;
             footwearService = _footwearService;
         }
+
         [Route("Login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] User user)
@@ -47,7 +48,6 @@ namespace backend.Controllers
             return Ok(korisnik);
 
         }
-
 
         [Route("CreateUser")]
         [HttpPost]
@@ -195,13 +195,18 @@ namespace backend.Controllers
             user.favorites.Remove(modelID);
             string res = await userService.UpdateUser(userID, user);
 
-            return Ok(res);
+            return Ok(1);
         }
 
         [Route("GetUser/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetUser(string id)
         {
+            if(id.Length < 24 || id.Length > 24)
+            {
+                return BadRequest("Nevalidan user ID!");
+            }
+
             User u = await userService.GetUserByID(id);
             return Ok(u);
         }

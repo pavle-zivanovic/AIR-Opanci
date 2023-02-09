@@ -23,5 +23,10 @@ namespace Services
             return purchase.Id;
         }
 
+        public async Task<Purchase> GetPurchaseByID(string id)
+        {
+            return await purchaseCollection.Find(p => p.Id == id).FirstOrDefaultAsync();
+        }
+
     }
 }

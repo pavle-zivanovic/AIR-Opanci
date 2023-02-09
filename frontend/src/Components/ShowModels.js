@@ -237,7 +237,7 @@ const DeleteModel = (id) =>{
           {
             alert("Niste u mogucnosti da obrisete ovaj model obuce!");
           }
-          else
+          else if(data == 1)
           {
             window.location.reload(true)
           }
@@ -316,7 +316,7 @@ const DeleteModel = (id) =>{
                     >
                         <CardMedia
                             sx={{ height: 140 }}
-                            image = {"../Images/" + model.image}
+                            image = {model.image}
                             onClick={() => {navigate("/ModelPage"); setSelectedModel(model); console.log(JSON.stringify(model));}}
                         />
                         <Typography 

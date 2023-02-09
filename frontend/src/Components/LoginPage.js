@@ -1,15 +1,6 @@
 import React from 'react';
-import {useEffect, useState} from "react";
-import Card from '@mui/material/Card';
+import {useState} from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import IconButton from '@mui/material/IconButton';
-import Grid from '@mui/material/Unstable_Grid2';
-import Box from '@mui/material/Box';
 import '../Styles/Login.css';
 
 
