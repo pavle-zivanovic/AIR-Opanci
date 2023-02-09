@@ -27,6 +27,7 @@ namespace Models
 
         public string gender { get; set; }
 
+        //pamti se id usera koji je kreirao model
         public string user {get ;set;}
 
         //pamtimo listu id-eva usera koji su lajkovali model

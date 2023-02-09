@@ -10,10 +10,10 @@ namespace Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        //pamti se id usera
+        //pamti se id usera koji je obavio kupovinu
         public string user { get; set; }
 
-        //pamti se id obuce
+        //pamti se lista id-eva obuce
         public List<string> footwear { get; set; }
 
         public string date { get; set; }

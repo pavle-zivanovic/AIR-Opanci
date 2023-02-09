@@ -22,11 +22,14 @@ namespace Models
 
         public string phone { get; set; }
 
+        //pamti se lista id-eva kupovina koje je obavio user
         [BsonElement("purchased items")]
         public List<string> items { get; set; } = null!;
 
+        //pamti se lista id-eva modela koje je user lajkovao
         public List<string> favorites { get; set; } = null!;
 
+        //pamti se lista id-eva modela koje je user postavio
         public List<string> postedItems { get; set; } = null!;
     }
 }
