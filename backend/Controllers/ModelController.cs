@@ -143,5 +143,50 @@ namespace backend.Controllers
 
             return Ok(models);
         }
+
+        [Route("SetModelDiscount/{modelID}/{discount}")]
+        [HttpPut]
+        public async Task<IActionResult> SetModelDiscount(string modelID, bool discount)
+        {
+            if(modelID.Length < 24 || modelID.Length > 24)
+            {
+                return BadRequest("Nevalidan modelID!");
+            }
+
+            var model = await modelService.GetModelByID(modelID);
+
+            if(model == null)
+            {
+                return BadRequest("Nepostojeci model!");
+            }
+
+            if(discount == true)
+            {
+                if(model.discount == 100)
+                {
+                    model.discount = 100;
+                }
+                else
+                {
+                    model.discount += 5;
+                }
+            }
+
+            if(discount == false)
+            {
+                if(model.discount == 0)
+                {
+                    model.discount = 0;
+                }
+                else
+                {
+                    model.discount -= 5;
+                }
+            }
+
+            await modelService.UpdateModel(model.Id, model);
+
+            return Ok(model.discount);
+        }
     }
 }

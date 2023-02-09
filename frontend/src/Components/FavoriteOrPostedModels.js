@@ -9,6 +9,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 function FavoriteOrPostedModels({input}){
     const [models ,setModels] = useState(null);
@@ -30,12 +32,12 @@ function FavoriteOrPostedModels({input}){
 
       return(
         <div>
-            {models && models != null && userID && userID != null && <FavoriteModelsRender models={models} userID={userID}/>}
+            {models && models != null && userID && userID != null && <FavoriteModelsRender models={models} userID={userID} input={input}/>}
         </div>
        )
 }
 
-function FavoriteModelsRender({models, userID}){
+function FavoriteModelsRender({models, userID, input}){
 
 let modelID = null;
 
@@ -64,6 +66,18 @@ const LikeTheModel = (id, like) =>{
   }
 
   window.location.reload(true)
+}
+
+const SetModelDiscount = (modelID, discount) =>{
+    fetch("/Model/SetModelDiscount/"+modelID+"/"+discount,
+    {
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json"
+        },
+    })
+    
+    window.location.reload(true)
 }
 
     return(
@@ -106,6 +120,8 @@ const LikeTheModel = (id, like) =>{
                             {model.price} RSD
                             </Typography>
                         </CardContent>
+                        {input === "favorites"
+                        ?
                         <CardActions>
                             <IconButton sx={{width:"30px", height:"30px"}}
                             onClick={() => LikeTheModel(model.id, model.users.includes(userID) ? false : true)}>
@@ -113,6 +129,25 @@ const LikeTheModel = (id, like) =>{
                                 color:model.users.includes(userID) ? "red" : "black"}} />
                             </IconButton>
                         </CardActions>
+                        :
+                        <CardActions>
+                            <Typography 
+                            variant="h7" 
+                            component="div"
+                            textAlign="center" 
+                            fontWeight="bold">
+                            discount:
+                            </Typography>
+                            <IconButton sx={{width:"30px", height:"30px"}}
+                            onClick={() => SetModelDiscount(model.id, true)}>
+                                <AddIcon sx={{width:"27px", height:"27px", color:"black"}} />
+                            </IconButton>
+                            <IconButton sx={{width:"30px", height:"30px"}}
+                            onClick={() => SetModelDiscount(model.id, false)}>
+                                <RemoveIcon sx={{width:"27px", height:"27px", color:"black"}} />
+                            </IconButton>
+                        </CardActions>
+                        }
                     </Card>
                 </Grid>
                 ))}
