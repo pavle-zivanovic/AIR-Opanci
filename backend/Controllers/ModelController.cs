@@ -109,5 +109,13 @@ namespace backend.Controllers
             var models = await modelService.FilterModels(categories, brands, price, gender);
             return Ok(models);
         }
+
+        [Route("GetAllModels")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllModels()
+        {
+            var models = await modelService.GetAllModels();
+            return Ok(models);
+        }
     }
 }

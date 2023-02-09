@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import {InputLabel, Select ,MenuItem, FormControl }from '@mui/material';
 import { Dialog ,DialogActions,DialogContent ,DialogTitle} from '@mui/material';
@@ -33,7 +33,24 @@ function AddFootwear(){
     const [modelID ,setModelID] = useState('')
     const [model, setModel] = useState('')
     const [modelError , setModelError] = useState(false)
+    const [allModels , setAllModels] = useState([])
 
+    async function getAllModels(){
+        await fetch("/Model/GetAllModels",
+        {
+            method:"GET",
+            headers:{
+                "Content-Type":"application/json"
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            setAllModels(data);
+            });
+    }
+    useEffect(() => {
+        getAllModels();
+    },[])
 
     const handleClose = () => {
         setOpen(false)
@@ -207,28 +224,9 @@ function AddFootwear(){
 
         
     async function handleModelChange(event){
-        
         setModel(event.target.value);
-
-        try{
-            let result = await fetch("Model/GetModelByName/" + event.target.value, {
-                method : 'GET',
-                headers : {
-                  'Content-Type': 'application/json; charset=utf-8',
-                  'Accept': 'application/json; charset=utf-8'
-                },
-              });
-              let a = await result.json();
-              console.log(a);
-              setModelID(a.id);
-
-
-           }
-        catch (error)
-           {
-              //console.log(error)
-           }
-        };
+        setModelID(event.target.value);
+    }
 
     return(
         <div class="AddFootwear">
@@ -273,11 +271,9 @@ function AddFootwear(){
                                 error={modelError}      
                                 onChange={handleModelChange}
                             >
-                                <MenuItem value='Air Force 1'>Air Force 1</MenuItem>
-                                <MenuItem value={20}>Air Max 95</MenuItem>
-                                <MenuItem value={30}>Jordan 1</MenuItem>
-                                <MenuItem value={40}>VaporMax</MenuItem>
-                                <MenuItem value={50}>Gazzelle</MenuItem>
+                                {allModels.map((model, index) => (
+                                    <MenuItem value={model.id}>{model.name}</MenuItem>
+                                ))}
                             </Select> 
                             </FormControl>
                             <input class="btn_AddNew" type={'button'} value='Add new' onClick={handleClick} />

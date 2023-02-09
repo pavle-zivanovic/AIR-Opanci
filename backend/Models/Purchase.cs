@@ -14,7 +14,7 @@ namespace Models
         public string user { get; set; }
 
         //pamti se id obuce
-        public string footwear { get; set; }
+        public List<string> footwear { get; set; }
 
         public string date { get; set; }
     }

@@ -78,6 +78,8 @@ const ColoredLine = ({ color }) => (
     />
 );
 
+
+
     
 function CartPage(){
     const navigate = useNavigate();
@@ -88,18 +90,39 @@ function CartPage(){
         console.log(cartItems)
     },[cartItems])
 
+    async function createPurchase(){
+
+        const purchase = {
+            user: localStorage.getItem('user-info'),
+            footwear: cartItems.map((item)=> item.item.id),
+            date : "Januar 9 2023"
+       }
+       console.log(purchase);
+    
+        let result = await fetch("Purchase/CreatePurchase/", {
+            method : 'POST',
+            headers : {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Accept': 'application/json; charset=utf-8'
+            },
+            body : JSON.stringify(purchase)
+          });
+
+          alert("uspesna kupovina")
+    }
+
     return(
         <div style={{display:'flex', flexDirection:'column'}}>
             <div>
             <div style={{marginTop:'10px'}}>
              {cartItems.map((item, index) =>(
-                <Typography style={{backgroundColor: index%2==0?'rgb(232, 246, 255)':'rgb(255, 255, 255)', textAlign:'right', fontSize:'25px', marginRight:'50px'}}>{item.brand + " " + item.name + " | Size " + item.size} {index!=0? ' ':' '}{(item.discount==0? (item.price) : (item.price*(100-item.discount)/100)) + " RSD"}</Typography>
+                <Typography style={{backgroundColor: index%2==0?'rgb(232, 246, 255)':'rgb(255, 255, 255)', textAlign:'right', fontSize:'25px', marginRight:'50px'}}>{item.model.brand + " " + item.model.name + " | Size " + item.item.size} {index!=0? ' ':' '}{(item.model.discount==0? (item.model.price) : (item.price*(100-item.model.discount)/100)) + " RSD"}</Typography>
             ))}
             </div>
             <ColoredLine color={'black'}></ColoredLine>
-             <Typography style={{fontWeight:'bold', textAlign:'right', fontSize:'25px', marginRight:'50px'}}>Total: {(cartItems.reduce((sum, item)=>{return sum + (item.discount==0? (item.price) : (item.price*(100-item.discount)/100))}, 0))  + " RSD"}</Typography>
-             <Card sx={{width:'500px', float:'right', marginRight:'40px', marginTop:'20px', backgroundColor:'rgb(27, 92, 255)',textAlign:'center', color:'white', borderRadius: '25px' }}
-                    onClick={() => {navigate("");}}
+             <Typography style={{fontWeight:'bold', textAlign:'right', fontSize:'25px', marginRight:'50px'}}>Total: {(cartItems.reduce((sum, item)=>{return sum + (item.model.discount==0? (item.model.price) : (item.model.price*(100-item.model.discount)/100))}, 0))  + " RSD"}</Typography>
+             <Card sx={{width:'500px', float:'right', marginRight:'40px', marginTop:'20px', backgroundColor:'rgb(50, 145, 255)',textAlign:'center', color:'white', borderRadius: '25px' }}
+                    onClick={() => {navigate("/"); createPurchase();}}
                     >
                     <Typography style={{fontSize:'25px'}}> Purchase </Typography>
             </Card>
@@ -107,14 +130,13 @@ function CartPage(){
             {cartItems.map((item, index) =>(
             <div className='ModelPage'>
                 <div className='LeftPart'>
-                    <img src={item.image} alt="Logo" />
+                    <img src={item.model.image} alt="Logo" />
                 </div>
                 <div className='RightPart'>
-                    <Typography style={{fontSize:'30px', marginLeft:'50px'}}>{item.gender + " " + item.type}</Typography>
-                    <Typography style={{fontSize:'50px', marginLeft:'50px'}}>{item.brand + " " + item.name + " | Size " + item.size}</Typography>
-                    <Typography style={{fontSize:'25px', marginLeft:'50px'}}>{(item.discount==0? (item.price) : (item.price*(100-item.discount)/100)) + " RSD"}</Typography>
-                    {item.discount!=0? <Typography style={{fontSize:'15px', marginLeft:'50px'}}>{item.discount+"% popusta"}</Typography>:null}
-                    {item.user!=null? <Typography style={{fontSize:'15px', marginLeft:'50px'}}>{"Posted by " + item.user}</Typography> : null}
+                    <Typography style={{fontSize:'30px', marginLeft:'50px'}}>{item.model.gender + " " + item.model.type}</Typography>
+                    <Typography style={{fontSize:'50px', marginLeft:'50px'}}>{item.model.brand + " " + item.model.name + " | Size " + item.item.size}</Typography>
+                    <Typography style={{fontSize:'25px', marginLeft:'50px'}}>{(item.model.discount==0? (item.model.price) : (item.model.price*(100-item.model.discount)/100)) + " RSD"}</Typography>
+                    {item.model.discount!=0? <Typography style={{fontSize:'15px', marginLeft:'50px'}}>{item.model.discount+"% popusta"}</Typography>:null}
                     <Card sx={{marginLeft:'38px', marginTop:'20px', backgroundColor:'rgb(255, 65, 27)',textAlign:'center', color:'white', borderRadius: '25px' }}
                     onClick={() => {setCartItems(cartItems.filter((item_, index_) => index !== index_));}}
                     >

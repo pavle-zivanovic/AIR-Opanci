@@ -148,5 +148,11 @@ namespace Services
                 return await modelCollection.Find(m => m.gender == gender).ToListAsync();
             }
         }
+
+        
+        public async Task<List<Model>> GetAllModels()
+        {
+            return await modelCollection.Find(m => true).ToListAsync();
+        }
     }
 }

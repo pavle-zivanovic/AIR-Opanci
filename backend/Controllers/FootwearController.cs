@@ -14,10 +14,12 @@ namespace backend.Controllers
     public class FootwearController : ControllerBase
     {
         private readonly FootwearService footwearService;
+        private readonly ModelService modelService;
 
-        public FootwearController(FootwearService _footwearService)
+        public FootwearController(FootwearService _footwearService, ModelService _modelService)
         {
             footwearService = _footwearService;
+            modelService = _modelService;
         }
 
         [Route("CreateFootwear")]
@@ -32,6 +34,9 @@ namespace backend.Controllers
             };
 
             string res = await footwearService.CreateFootwear(f);
+            var model = await modelService.GetModelByID(footwear.model);
+            model.items.Add(res);
+            await modelService.UpdateModel(footwear.model, model);
             return Ok(res);
         }
 
@@ -58,5 +63,12 @@ namespace backend.Controllers
             return Ok(f);
         }
 
+        [Route("GetFootwearFromModel/{modelID}")]
+        [HttpGet]
+        public async Task<IActionResult> GetFootwearFromModel(string modelID)
+        {
+            var f = await footwearService.GetFootwearFromModel(modelID);
+            return Ok(f);
+        }
     }
 }

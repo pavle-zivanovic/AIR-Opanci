@@ -17,5 +17,11 @@ namespace Services
             purchaseCollection = mongoDatabase.GetCollection<Purchase>(AIROpanciDatabaseSettings.Value.PurchaseCollectionName);
         }
 
+        public async Task<string> CreatePurchase(Purchase purchase)
+        {
+            await purchaseCollection.InsertOneAsync(purchase);
+            return "Uspesno";
+        }
+
     }
 }

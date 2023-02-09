@@ -20,7 +20,7 @@ namespace Services
         public async Task<string> CreateFootwear(Footwear footwear)
         {
             await footwearCollection.InsertOneAsync(footwear);
-            return "Uspesno";
+            return footwear.Id;
         }
 
         public async Task<List<Footwear>> GetAllFootwear()
@@ -36,6 +36,17 @@ namespace Services
         public async Task<string> DeleteFootwear(string id)
         {
             await footwearCollection.DeleteOneAsync(f => f.Id == id);
+            return "Uspesno";
+        }
+
+        public async Task<List<Footwear>> GetFootwearFromModel(string modelID)
+        {
+            return await footwearCollection.Find(f => f.model==modelID && f.status==false).ToListAsync();
+        }
+
+        public async Task<string> UpdateFootwear(string footwearID, Footwear newFootwear)
+        {
+            await footwearCollection.ReplaceOneAsync(f => f.Id == footwearID, newFootwear);
             return "Uspesno";
         }
     }
