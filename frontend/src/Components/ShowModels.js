@@ -308,7 +308,7 @@ const DeleteModel = (id) =>{
                         <CardMedia
                             sx={{ height: 140 }}
                             image = {"../Images/" + model.image}
-                            onClick={() => {navigate("/ModelPage"); setSelectedModel(model_);}}
+                            onClick={() => {navigate("/ModelPage"); setSelectedModel(model); console.log(JSON.stringify(model));}}
                         />
                         <Typography 
                             variant="h7" 
