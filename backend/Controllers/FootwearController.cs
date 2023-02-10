@@ -74,16 +74,16 @@ namespace backend.Controllers
             return Ok(list);
         }
 
-        [Route("GetFootwearFromModel/{modelID}")]
+        [Route("GetFootwearFromModel/{modelID}/{userID}")]
         [HttpGet]
-        public async Task<IActionResult> GetFootwearFromModel(string modelID)
+        public async Task<IActionResult> GetFootwearFromModel(string modelID, string userID)
         {
             if(modelID.Length < 24 || modelID.Length > 24)
             {
                 return BadRequest("Nevalidan modelID!");
             }
 
-            var f = await footwearService.GetFootwearFromModel(modelID);
+            var f = await footwearService.GetFootwearFromModel(modelID, userID);
 
             if(f == null)
             {

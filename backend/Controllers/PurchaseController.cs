@@ -44,6 +44,12 @@ namespace backend.Controllers
             string res = await purchaseService.CreatePurchase(p);
             for(int i=0; i<purchase.footwear.Count; i++){
                 var f = await footwearService.GetFootwearByID(purchase.footwear[i]);
+                if(f.user==purchase.user)
+                    return Ok(-1);
+            }
+
+            for(int i=0; i<purchase.footwear.Count; i++){
+                var f = await footwearService.GetFootwearByID(purchase.footwear[i]);
                 f.status=true;
                 await footwearService.UpdateFootwear(purchase.footwear[i], f);
             }
@@ -52,7 +58,7 @@ namespace backend.Controllers
             u.items.Add(res);  
             await userService.UpdateUser(purchase.user, u);
 
-            return Ok();
+            return Ok(0);
         }
 
         [Route("GetUserPurchase/{userID}")]

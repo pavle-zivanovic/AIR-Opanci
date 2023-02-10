@@ -39,9 +39,9 @@ namespace Services
             return "Uspesno";
         }
 
-        public async Task<List<Footwear>> GetFootwearFromModel(string modelID)
+        public async Task<List<Footwear>> GetFootwearFromModel(string modelID, string userID)
         {
-            return await footwearCollection.Find(f => f.model==modelID && f.status==false).ToListAsync();
+            return await footwearCollection.Find(f => f.model==modelID && f.status==false && f.user!=userID).ToListAsync();
         }
 
         public async Task<string> UpdateFootwear(string footwearID, Footwear newFootwear)

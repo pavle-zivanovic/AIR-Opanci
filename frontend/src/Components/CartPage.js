@@ -59,8 +59,16 @@ function CartPage(){
             body : JSON.stringify(purchase)
           });
 
-          setCartItems([]);
-          alert("uspesna kupovina")
+          let a = await result.json();
+          if ( a == -1)
+          {
+            alert("Ne mozete da kupite model koji ste vi postavili")
+          }
+         else
+          {
+            setCartItems([]);
+            alert("uspesna kupovina")
+          }
     }
 
     return(

@@ -17,7 +17,12 @@ function ModelPage(){
     let [footwear, setFootwear] = React.useState([]);
     
     async function getAllFootwear(){
-        await fetch("/Footwear/GetFootwearFromModel/" + selectedModel.id,
+        const userID = localStorage.getItem('user-info')
+        let user="user";
+        if(userID!=null && userID.length>2){
+            user = userID.substring(0, userID.length - 1).substring(1)
+        }
+        await fetch("/Footwear/GetFootwearFromModel/" + selectedModel.id + "/" + user,
         {
             method:"GET",
             headers:{
@@ -53,7 +58,7 @@ function ModelPage(){
                 {selectedModel.discount!=0? <Typography style={{fontSize:'15px', marginLeft:'50px'}}>{selectedModel.discount+"% popusta"}</Typography>:null}
                 <Grid container spacing={2} style={{marginLeft:'38px', marginBottom:'50px', marginTop:'20px'}}>
                     {footwear!=null? footwear.map((item, index) => (
-                        (footwear.map(f => f.size).filter((item, index_)=>index_<index).includes(item.size)==false && (cartItems==null || cartItems.map(f => f.item.id).includes(item.id)==false))?(
+                        (footwear.map(f => f.size).filter((item, index_)=>index_<index && item.status==false).includes(item.size)==false && (cartItems==null || cartItems.map(f => f.item.id).includes(item.id)==false))?(
                         <Grid xs={3} sm={3} md={3}>
                             <Card className='SizeCard' sx={{backgroundColor: (selectedItem!=null && item.id==selectedItem.item.id)?'rgb(50, 145, 255)':'black', textAlign:'center', color:'white', borderRadius: '25px', maxWidth: 300 }}
                             key={index}
