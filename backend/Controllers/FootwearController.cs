@@ -51,23 +51,27 @@ namespace backend.Controllers
             return Ok(list);
         }
 
-        [Route("GetFootwearByID/{id}")]
+        [Route("GetFootwearsByAvailableSize/{modelsID}")]
         [HttpGet]
-        public async Task<IActionResult> GetFootwearByID(string id)
+        public async Task<IActionResult> GetFootwearsByAvailableSize(string modelsID)
         {
-            if(id.Length < 24 || id.Length > 24)
+            var models = modelsID.Split(",");
+            List<List<string>> list = new List<List<string>>(models.Length);
+
+            for(int i=0; i < models.Length; i++)
             {
-                return BadRequest("Nevalidan footwearID!");
+                var footwears = await footwearService.GetFootwearsByStatus(models[i], false);
+
+                List<string> size = new List<string>();
+                foreach(Footwear f in footwears)
+                {
+                    size.Add(f.size);
+                }
+
+                list.Add(size);
             }
-
-            var f = await footwearService.GetFootwearByID(id);
-
-            if(f == null)
-            {
-                return BadRequest("Nepostojeci footwear!");
-            }
-
-            return Ok(f);
+            
+            return Ok(list);
         }
 
         [Route("GetFootwearFromModel/{modelID}")]
@@ -87,6 +91,47 @@ namespace backend.Controllers
             }
             
             return Ok(f);
+        }
+
+        [Route("DeleteFootwearFromModel/{modelID}/{size}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteFootwearFromModel(string modelID, string size)
+        {
+            if(modelID.Length < 24 || modelID.Length > 24)
+            {
+                return BadRequest("Nevalidan modelID!");
+            }
+
+            var model = await modelService.GetModelByID(modelID);
+
+            if(model == null)
+            {
+                return BadRequest("Nepostojeci model!");
+            }
+
+            var footwearsTrue = await footwearService.GetFootwearsByStatus(modelID, true);
+            var footwearsFalse = await footwearService.GetFootwearsByStatus(modelID, false);
+
+            //ne moze da se obrise ako ima samo 1 par obuce
+            if(footwearsTrue.Count == 0 && footwearsFalse.Count == 1)
+            {
+                return BadRequest(-1);
+            }
+
+            foreach(string i in model.items)
+            {
+                var footwear = await footwearService.GetFootwearByID(i);
+                if(footwear.status == false && footwear.size == size)
+                {
+                    model.items.Remove(i);
+                    await footwearService.DeleteFootwear(i);
+                    break;
+                }
+            }
+
+            await modelService.UpdateModel(modelID, model);
+
+            return Ok(0);
         }
     }
 }

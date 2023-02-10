@@ -354,15 +354,6 @@ const DeleteModel = (id) =>{
                                 <FavoriteIcon sx={{width:"27px", height:"27px",
                               color:model.users.includes(userID) ? "red" : "black"}} />
                             </IconButton>
-                            <IconButton sx={{width:"30px", height:"30px"}}
-                            onClick={
-                            localStorage.getItem('user-info') !== null
-                            ?
-                            ()=>DeleteModel(model.id)
-                            :
-                            () => alert("Morate da se ulogujete!")}>
-                                <DeleteIcon sx={{width:"27px", height:"27px", color:"black"}} />
-                            </IconButton>
                         </CardActions>
                     </Card>
                 </Grid>

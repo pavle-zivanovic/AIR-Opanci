@@ -11,10 +11,25 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const blackTheme = createTheme({
+    palette: {
+      primary: {
+        main: "rgb(0,0,0)",
+      },
+    },
+  });
 
 function FavoriteOrPostedModels({input}){
     const [models ,setModels] = useState(null);
     const [userID, setUserID] = useState(JSON.parse(window.localStorage.getItem('user-info')));
+    let modelsid = "";
+    const [footwearsSize ,setFootwearsSize] = useState(null);
 
     useEffect(() => {
         fetch("/Model/GetFavoriteOrPostedModels/"+ userID + "/" + input,
@@ -27,17 +42,31 @@ function FavoriteOrPostedModels({input}){
         .then((res) => res.json())
         .then((data) => {
                 setModels(data);
+                for(let i=0; i<data.length; i++){
+                    modelsid += i==data.length-1 ? data[i].id : data[i].id + ",";
+                }
+                fetch("/Footwear/GetFootwearsByAvailableSize/"+ modelsid,
+                {
+                    method:"GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                        setFootwearsSize(data);
+                    });
             });
       },[])
 
       return(
         <div>
-            {models && models != null && userID && userID != null && <FavoriteModelsRender models={models} userID={userID} input={input}/>}
+            {models && models != null && userID && userID != null && footwearsSize && footwearsSize != null && <FavoriteModelsRender models={models} userID={userID} input={input} footwearsSize={footwearsSize}/>}
         </div>
        )
 }
 
-function FavoriteModelsRender({models, userID, input}){
+function FavoriteModelsRender({models, userID, input, footwearsSize}){
 
 let modelID = null;
 
@@ -79,6 +108,33 @@ const SetModelDiscount = (modelID, discount) =>{
     
     window.location.reload(true)
 }
+
+const [size, setSize] = React.useState('');
+
+const handleSizeChange = (event) => {
+  setSize(event.target.value);
+};
+
+const DeleteFootwear = (modelID, s) =>{
+  
+    fetch("/Footwear/DeleteFootwearFromModel/"+modelID+"/"+s,
+    {
+        method:"DELETE",
+        headers:{
+            "Content-Type":"application/json"
+        },
+    }).then((res) =>  res.json())
+    .then((data) => {
+            if(data == -1)
+            {
+              alert("Niste u mogucnosti da obrisete ovaj par obuce!");
+            }
+            else if(data == 0)
+            {
+              window.location.reload(true)
+            }
+        });
+  }
 
     return(
         <Box sx={{ flexGrow: 1,
@@ -130,23 +186,64 @@ const SetModelDiscount = (modelID, discount) =>{
                             </IconButton>
                         </CardActions>
                         :
-                        <CardActions>
-                            <Typography 
-                            variant="h7" 
-                            component="div"
-                            textAlign="center" 
-                            fontWeight="bold">
-                            discount:
-                            </Typography>
-                            <IconButton sx={{width:"30px", height:"30px"}}
-                            onClick={() => SetModelDiscount(model.id, true)}>
-                                <AddIcon sx={{width:"27px", height:"27px", color:"black"}} />
-                            </IconButton>
-                            <IconButton sx={{width:"30px", height:"30px"}}
-                            onClick={() => SetModelDiscount(model.id, false)}>
-                                <RemoveIcon sx={{width:"27px", height:"27px", color:"black"}} />
-                            </IconButton>
-                        </CardActions>
+                        <React.Fragment>
+                            <CardActions>
+                                <Typography 
+                                variant="h7" 
+                                component="div"
+                                textAlign="center" 
+                                fontWeight="bold">
+                                discount:
+                                </Typography>
+                                <IconButton sx={{width:"30px", height:"30px"}}
+                                onClick={() => SetModelDiscount(model.id, true)}>
+                                    <AddIcon sx={{width:"27px", height:"27px", color:"black"}} />
+                                </IconButton>
+                                <IconButton sx={{width:"30px", height:"30px"}}
+                                onClick={() => SetModelDiscount(model.id, false)}>
+                                    <RemoveIcon sx={{width:"27px", height:"27px", color:"black"}} />
+                                </IconButton>
+                            </CardActions>
+                            <CardActions>
+                                <Typography 
+                                variant="h7" 
+                                component="div"
+                                textAlign="center" 
+                                fontWeight="bold">
+                                delete:
+                                </Typography>
+                                <FormControl sx={{width:"26%"}}>
+                                    <ThemeProvider theme={blackTheme}>
+                                        <InputLabel>Size</InputLabel>
+                                        <Select
+                                        vaule={size}
+                                        label="size"
+                                        onChange={handleSizeChange}>
+                                           {footwearsSize[index].map((item, i) => (
+                                            <MenuItem key={i} value={item}>
+                                                {item}
+                                            </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </ThemeProvider>
+                                </FormControl>
+                                <button
+                                onClick={()=>DeleteFootwear(model.id,size != '' ? size : '0')}
+                                style={{
+                                backgroundColor: "black",
+                                borderRadius:"6px",
+                                color: "white",
+                                textAlign: "center",
+                                display: "inline-block",
+                                fontSize: "16px",
+                                cursor: "pointer",
+                                height:"55px",
+                                marginLeft:"5%"
+                                }}>
+                                    DELETE
+                                </button>
+                            </CardActions>
+                        </React.Fragment>
                         }
                     </Card>
                 </Grid>

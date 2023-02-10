@@ -49,6 +49,11 @@ namespace Services
             await footwearCollection.ReplaceOneAsync(f => f.Id == footwearID, newFootwear);
             return "Uspesno";
         }
+
+        public async Task<List<Footwear>> GetFootwearsByStatus(string modelID, bool status)
+        {
+            return await footwearCollection.Find(f => f.model == modelID && f.status == status).ToListAsync();
+        }
     }
 }
 
